@@ -7,7 +7,8 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 	1. Ter a representação de um grafo em objetos.
 		1. Documentar
 	2. Ter a visualização de uma aliança destacada (feita manualmente).
-	3. Ter uma biblioteca de operações em grafos pronta para ser utilizada.
+	3. Separar as operações de grafos em outra linguagem e linkar.
+		1. Ter uma biblioteca de operações em grafos pronta para ser utilizada.
 - Dia ==03/outubro==
 	1. Definir a representação de uma aliança em objetos.
 		1. Documentar

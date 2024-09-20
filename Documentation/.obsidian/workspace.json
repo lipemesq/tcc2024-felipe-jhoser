@@ -97,6 +97,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Planejamento.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,10 +124,10 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "716e792ed6e512d4",
+  "active": "1868fc46e6888378",
   "lastOpenFiles": [
-    "Planejamento.md",
     "Untitled.md",
+    "Planejamento.md",
     "Referências.md"
   ]
 }
