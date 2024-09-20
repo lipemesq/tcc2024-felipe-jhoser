@@ -1,0 +1,94 @@
+{
+  "main": {
+    "id": "f33347571a956412",
+    "type": "split",
+    "children": [
+      {
+        "id": "5e6c450f39bfca5a",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Planejamento.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d0083375ecea527b",
+    "type": "split",
+    "children": [
+      {
+        "id": "f7e9df69cbaf945c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "51374751045fed60",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "e5f0959aeb0f0755",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8d4c4dd758141da2",
+    "type": "split",
+    "children": [
+      {
+        "id": "87839c8a39a7eac1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "80654e7ddf819b79",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Planejamento.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "5e6c450f39bfca5a",
+  "lastOpenFiles": [
+    "Planejamento.md"
+  ]
+}
