@@ -19,6 +19,9 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 		1. [ ] Documentar
 	2. [ ] Representar visualmente esse resultado de forma reativa.
 		1. [ ] Documentar?
+- Dia 17/outubro
+	1. [ ] Combinar e iniciar processo de escrita do documento de entrega final.
+	2. [ ] Continuar / expandir os mecanismos de busca de aliança.
 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana
