@@ -1,12 +1,14 @@
-import example from "../public/examples/1.json";
+import example from "../public/examples/2.json";
 
 // MARK: - Types
 
 export class Node {
 	id: number;
+	alliance?: number;
 
-	constructor(id: number) {
+	constructor(id: number, alliance?: number) {
 		this.id = id;
+		this.alliance = alliance;
 	}
 }
 
@@ -40,21 +42,14 @@ export class Graph {
 		this.links = links;
 		this.defensiveAlliances = defensiveAlliances;
 	}
-}
-export class GraphState {
-	graph: Graph;
-
-	constructor(graph: Graph) {
-		this.graph = graph;
-	}
 
 	/**
-	 * Creates a GraphState instance from a JSON object.
+	 * Creates a Graph instance from a JSON object.
 	 *
 	 * @param {any} json - The JSON object to parse.
-	 * @returns {GraphState} A new GraphState instance created from the JSON.
+	 * @returns {Graph} A new Graph instance created from the JSON.
 	 */
-	static fromJson(json: any): GraphState {
+	static fromJson(json: any): Graph {
 		const nodes = json.nodes.map((node: any) => new Node(node.id));
 		const links = json.links.map((link: any) => {
 			const sourceNode = nodes.find(
@@ -75,18 +70,55 @@ export class GraphState {
 			}
 		);
 		const graph = new Graph(nodes, links, defensiveAlliances);
-		return new GraphState(graph);
+		graph.prepareGraph();
+		return graph;
+	}
+
+	/**
+	 * Prepares the graph by assigning alliance numbers to nodes and adjusting links based on alliances.
+	 * This method iterates through the defensive alliances and assigns the alliance ID to each node that belongs to the alliance.
+	 * It then adjusts the links to ensure that if a link has a node from an alliance at one end, it points to that node.
+	 * If both nodes of a link belong to the same alliance, a new link is created in the opposite direction.
+	 */
+	prepareGraph() {
+		// Atribui o numero da aliança a qual pertence ao nó
+		this.defensiveAlliances?.forEach((da: Alliance) => {
+			da.nodes.forEach((nodeId) => {
+				const node = this.nodes.find((n) => n.id === nodeId);
+				if (node) {
+					node.alliance = da.id;
+				}
+			});
+		});
+
+		// se uma aresta tem um membro de uma aliança em uma ponta, aponta para ele
+		this.links.forEach((link, index, array) => {
+			const sourceNode = link.source;
+			const targetNode = link.target;
+
+			if (
+				sourceNode.alliance != undefined &&
+				targetNode.alliance == undefined
+			) {
+				const helper = sourceNode;
+				array[index].source = array[index].target;
+				array[index].target = helper;
+			}
+		});
 	}
 
 	/**
 	 * Updates the graph state with a new graph.
 	 *
 	 * @param {Graph} graph - The new graph to update the state with.
-	 * @returns {GraphState} This instance of GraphState with the updated graph.
+	 * @returns {Graph} This instance of Graph with the updated graph.
 	 */
-	updateGraph(graph: Graph): GraphState {
-		this.graph = graph;
-		return this;
+	updateGraph(graph: Graph): Graph {
+		return new Graph(
+			graph.nodes,
+			graph.links,
+			graph.defensiveAlliances || []
+		);
 	}
 
 	/**
@@ -94,14 +126,14 @@ export class GraphState {
 	 * @param {number} nodeId - The ID of the node to remove.
 	 * @returns {Graph} The updated graph.
 	 */
-	removeNode(nodeId: number): GraphState {
+	removeNode(nodeId: number): Graph {
 		// Remove links attached to the node
-		const newLinks = this.graph.links.filter(
+		const newLinks = this.links.filter(
 			(l) => l.source.id != nodeId && l.target.id != nodeId
 		);
 
 		// Remove the node
-		const newNodes = this.graph.nodes.filter((n) => n.id != nodeId);
+		const newNodes = this.nodes.filter((n) => n.id != nodeId);
 
 		// Reset node ids to array index
 		newNodes.forEach((n, idx) => {
@@ -109,8 +141,8 @@ export class GraphState {
 		});
 
 		// Update the graph properties directly
-		this.graph.nodes = newNodes;
-		this.graph.links = newLinks;
+		this.nodes = newNodes;
+		this.links = newLinks;
 
 		return this;
 	}
@@ -121,49 +153,63 @@ export class GraphState {
 	 *
 	 * @returns {Graph} The updated graph with the new node and link added.
 	 */
-	addRandomNode(): GraphState {
-		const id = this.graph.nodes.length;
+	addRandomNode(): Graph {
+		const id = this.nodes.length;
 		const newNode = new Node(id);
-		if (this.graph.nodes.length > 0) {
+		if (this.nodes.length > 0) {
 			const targetNode =
-				this.graph.nodes[
-					Math.floor(Math.random() * this.graph.nodes.length)
-				];
-			this.graph.links.push(new Link(newNode, targetNode));
+				this.nodes[Math.floor(Math.random() * this.nodes.length)];
+			this.links.push(new Link(newNode, targetNode));
 		}
-		this.graph.nodes.push(newNode);
+		this.nodes.push(newNode);
 
 		return this;
+	}
+
+	/**
+	 * Method to find a node by its ID.
+	 * @param {number} nodeId - The ID of the node to find.
+	 * @returns {Node | undefined} The node if found, otherwise undefined.
+	 */
+	findNodeById(nodeId: number): Node | undefined {
+		const node: Node | undefined = this.nodes.find(
+			(node) => node.id === nodeId
+		);
+		/*
+		console.log(
+			"Found node id:",
+			nodeId,
+			" and alliance: ",
+			node?.alliance
+		);*/
+		return node;
 	}
 }
 
 // For independent execution for debugging
 export const main = () => {
-	let data: Graph = new Graph(
-		example.nodes.map((n: any) => new Node(n.id)),
-		example.links.map(
-			(l: any) => new Link(new Node(l.source), new Node(l.target))
-		)
-	);
+	const exampleData: any = example;
+	let graph = Graph.fromJson(exampleData);
 
-	console.log("Initial data:", data);
+	console.log("Initial data:", graph);
 
-	const graphState = new GraphState(new Graph(data.nodes, data.links));
+	const foundNode = graph.findNodeById(1);
+	console.log("Found node alliance:", foundNode?.alliance);
 
-	graphState.addRandomNode();
-	console.log("Graph after adding random node:", graphState.graph);
+	graph.addRandomNode();
+	console.log("Graph after adding random node:", graph);
 
-	graphState.addRandomNode();
-	console.log("Graph after adding random node:", graphState.graph);
+	graph.addRandomNode();
+	console.log("Graph after adding random node:", graph);
 
-	graphState.addRandomNode();
-	console.log("Graph after adding random node:", graphState.graph);
+	graph.addRandomNode();
+	console.log("Graph after adding random node:", graph);
 
-	graphState.removeNode(0);
-	console.log("Graph after removal:", graphState.graph);
+	graph.removeNode(0);
+	console.log("Graph after removal:", graph);
 
-	graphState.addRandomNode();
-	console.log("Graph after adding random node:", graphState.graph);
+	graph.addRandomNode();
+	console.log("Graph after adding random node:", graph);
 };
 
 if (require.main === module) {

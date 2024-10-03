@@ -22,6 +22,7 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 - Dia 17/outubro
 	1. [ ] Combinar e iniciar processo de escrita do documento de entrega final.
 	2. [ ] Continuar / expandir os mecanismos de busca de aliança.
+- ... expandir a aliança nó-a-nó de forma animada?
 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana
