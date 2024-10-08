@@ -1,32 +1,33 @@
 {
-  "name": "aiai",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "webpack serve --mode development --open",
-    "debug": "node out/graphOperations.js",
-    "build": "tsc -p tsconfig.debug.json"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@types/react": "^18.3.8",
-    "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-force-graph-2d": "^1.25.6",
-    "react-force-graph-3d": "^1.24.3"
-  },
-  "devDependencies": {
-    "html-webpack-plugin": "^5.6.0",
-    "serve": "^14.2.0",
-    "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2",
-    "webpack": "^5.94.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
-  }
+	"name": "aiai",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "webpack serve --mode development --open",
+		"debug": "node out/graphOperations.js",
+		"build": "tsc -p tsconfig.debug.json",
+		"logic": "python src/graphAlliance.py"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@types/react": "^18.3.8",
+		"@types/react-dom": "^18.3.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-force-graph-2d": "^1.25.6",
+		"react-force-graph-3d": "^1.24.3"
+	},
+	"devDependencies": {
+		"html-webpack-plugin": "^5.6.0",
+		"serve": "^14.2.0",
+		"ts-loader": "^9.5.1",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.6.2",
+		"webpack": "^5.94.0",
+		"webpack-cli": "^5.1.4",
+		"webpack-dev-server": "^5.1.0"
+	}
 }

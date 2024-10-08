@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Planejamento.md",
+                "file": "Referências.md",
                 "mode": "source",
                 "source": false
               }
@@ -97,7 +97,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Planejamento.md",
+                "file": "Referências.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -126,8 +126,8 @@
   },
   "active": "1868fc46e6888378",
   "lastOpenFiles": [
-    "Untitled.md",
     "Planejamento.md",
+    "Untitled.md",
     "Referências.md"
   ]
 }
