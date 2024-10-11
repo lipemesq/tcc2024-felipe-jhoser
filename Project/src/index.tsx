@@ -27,37 +27,41 @@ const App: React.FC = () => {
 
 	const [allianceColors, setAllianceColors] = useState<string[]>([]);
 
-	const [exampleFile, setExampleFile] = useState<string>("1.json");
-	const [fileInput, setFileInput] = useState<File | null>(null); // Estado para o arquivo selecionado
+	const [fileSelectorLabel, setFileSelectorLabel] = useState<string>("-");
 
 	const exampleFiles = ["1.json", "2.json", "3.json"];
 	// const inputFiles = ["4.in", "5.in"];
 
+	useEffect(() => {
+		setAllianceColors(randomColors(state.defensiveAlliances?.length ?? 0));
+	}, [state]);
+
 	const loadLocalExample = async (file: string) => {
 		const response = await fetch(`/examples/${file}`);
 		const exampleData = await response.json();
-		loadJsonExample(exampleData);
+		loadJsonGraph(exampleData);
+		setFileSelectorLabel(file);
 	};
 
-	const loadImportedExample = async (file: string) => {
-		const response = await fetch(`/examples/${file}`);
-		const exampleData = await response.json();
-		loadJsonExample(exampleData);
+	const loadImportedExample = async (file: File) => {
+		if (file.type === "application/json") {
+			const reader = new FileReader();
+			reader.onload = async (e) => {
+				if (e.target && e.target.result) {
+					const exampleData = JSON.parse(e.target.result as string);
+					loadJsonGraph(exampleData);
+					setFileSelectorLabel("-");
+				}
+			};
+			reader.readAsText(file);
+		}
 	};
 
-	const loadJsonExample = async (json: JSON) => {
+	const loadJsonGraph = async (json: JSON) => {
 		const graph = Graph.fromJson(json);
 		setState((state) => state.updateGraph(graph));
 		setData(graph);
 	};
-
-	useEffect(() => {
-		loadLocalExample(exampleFile); // Carrega o exemplo inicial
-	}, [exampleFile]);
-
-	useEffect(() => {
-		setAllianceColors(randomColors(state.defensiveAlliances?.length ?? 0));
-	}, [state]);
 
 	// TODO: Trocar esse negócio de adicionar nó por focusOnNode
 
@@ -71,29 +75,16 @@ const App: React.FC = () => {
 		//setData({ nodes: state.nodes, links: state.links });
 	}, []);
 
-	const handleExampleChange = (
+	const handleFileSelected = (
 		event: React.ChangeEvent<HTMLSelectElement>
 	) => {
-		setExampleFile(event.target.value);
+		loadLocalExample(event.target.value);
 	};
 
-	const handleImportFile = async (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
+	const handleFileImported = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files && event.target.files.length > 0) {
-			const file1 = event.target.files[0];
-			if (file1.type === "application/json") {
-				const reader = new FileReader();
-				reader.onload = async (e) => {
-					if (e.target && e.target.result) {
-						const exampleData = JSON.parse(
-							e.target.result as string
-						);
-						loadJsonExample(exampleData);
-					}
-				};
-				reader.readAsText(file1);
-			}
+			const file = event.target.files[0];
+			loadImportedExample(file);
 		}
 	};
 
@@ -154,15 +145,6 @@ const App: React.FC = () => {
 		[state, allianceColors]
 	);
 
-	const changeSelectValue = (newValue: string) => {
-		const selectElement = document.getElementById(
-			"exampleSelect"
-		) as HTMLSelectElement;
-		if (selectElement) {
-			selectElement.value = newValue;
-		}
-	};
-
 	return (
 		<div style={{ position: "relative" }}>
 			<div
@@ -177,11 +159,10 @@ const App: React.FC = () => {
 					zIndex: 10,
 				}}
 			>
-				<select
-					id="exampleSelect"
-					onChange={handleExampleChange}
-					value={exampleFile}
-				>
+				<select onChange={handleFileSelected} value={fileSelectorLabel}>
+					<option value="-" disabled>
+						Escolha um exemplo
+					</option>
 					<optgroup label="Grafos prontos">
 						{exampleFiles.map((file) => (
 							<option key={file} value={file}>
@@ -201,8 +182,13 @@ const App: React.FC = () => {
 					id="fileInput"
 					type="file"
 					accept=".json, .in"
-					onChange={handleImportFile}
-					style={{ marginLeft: "10px" }}
+					onChange={handleFileImported}
+					style={{
+						marginLeft: "10px",
+						backgroundColor: "white",
+						paddingRight: "10px",
+						width: "auto",
+					}}
 				/>
 			</div>
 			<ForceGraph3D
