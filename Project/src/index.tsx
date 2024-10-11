@@ -24,22 +24,35 @@ interface GraphData {
 const App: React.FC = () => {
 	const [state, setState] = useState<Graph>(new Graph([], []));
 	const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
-	const [exampleFile, setExampleFile] = useState<string>("1.json");
+
 	const [allianceColors, setAllianceColors] = useState<string[]>([]);
 
-	// Array de arquivos de exemplo
-	const exampleFiles = ["1.json", "2.json", "3.json"]; // Adicione mais arquivos conforme necessário
+	const [exampleFile, setExampleFile] = useState<string>("1.json");
+	const [fileInput, setFileInput] = useState<File | null>(null); // Estado para o arquivo selecionado
 
-	const loadData = async (file: string) => {
+	const exampleFiles = ["1.json", "2.json", "3.json"];
+	// const inputFiles = ["4.in", "5.in"];
+
+	const loadLocalExample = async (file: string) => {
 		const response = await fetch(`/examples/${file}`);
 		const exampleData = await response.json();
-		const graph = Graph.fromJson(exampleData);
+		loadJsonExample(exampleData);
+	};
+
+	const loadImportedExample = async (file: string) => {
+		const response = await fetch(`/examples/${file}`);
+		const exampleData = await response.json();
+		loadJsonExample(exampleData);
+	};
+
+	const loadJsonExample = async (json: JSON) => {
+		const graph = Graph.fromJson(json);
 		setState((state) => state.updateGraph(graph));
 		setData(graph);
 	};
 
 	useEffect(() => {
-		loadData(exampleFile); // Carrega o exemplo inicial
+		loadLocalExample(exampleFile); // Carrega o exemplo inicial
 	}, [exampleFile]);
 
 	useEffect(() => {
@@ -62,6 +75,26 @@ const App: React.FC = () => {
 		event: React.ChangeEvent<HTMLSelectElement>
 	) => {
 		setExampleFile(event.target.value);
+	};
+
+	const handleImportFile = async (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		if (event.target.files && event.target.files.length > 0) {
+			const file1 = event.target.files[0];
+			if (file1.type === "application/json") {
+				const reader = new FileReader();
+				reader.onload = async (e) => {
+					if (e.target && e.target.result) {
+						const exampleData = JSON.parse(
+							e.target.result as string
+						);
+						loadJsonExample(exampleData);
+					}
+				};
+				reader.readAsText(file1);
+			}
+		}
 	};
 
 	const decideNodeColor = useCallback(
@@ -121,15 +154,57 @@ const App: React.FC = () => {
 		[state, allianceColors]
 	);
 
+	const changeSelectValue = (newValue: string) => {
+		const selectElement = document.getElementById(
+			"exampleSelect"
+		) as HTMLSelectElement;
+		if (selectElement) {
+			selectElement.value = newValue;
+		}
+	};
+
 	return (
-		<div>
-			<select onChange={handleExampleChange} value={exampleFile}>
-				{exampleFiles.map((file) => (
-					<option key={file} value={file}>
-						{`Exemplo ${file.replace(".json", "")}`}
-					</option>
-				))}
-			</select>
+		<div style={{ position: "relative" }}>
+			<div
+				style={{
+					backgroundColor: "transparent",
+					padding: "10px",
+					display: "flex",
+					flexDirection: "row",
+					position: "absolute",
+					top: "25px",
+					left: "25px",
+					zIndex: 10,
+				}}
+			>
+				<select
+					id="exampleSelect"
+					onChange={handleExampleChange}
+					value={exampleFile}
+				>
+					<optgroup label="Grafos prontos">
+						{exampleFiles.map((file) => (
+							<option key={file} value={file}>
+								{`Exemplo ${file.replace(".json", "")}`}
+							</option>
+						))}
+					</optgroup>
+					{/* <optgroup label="Calcular aliança">
+						{inputFiles.map((file) => (
+							<option key={file} value={file}>
+								{`Input ${file.replace(".in", "")}`}
+							</option>
+						))}
+					</optgroup> */}
+				</select>
+				<input
+					id="fileInput"
+					type="file"
+					accept=".json, .in"
+					onChange={handleImportFile}
+					style={{ marginLeft: "10px" }}
+				/>
+			</div>
 			<ForceGraph3D
 				linkLabel={(link) =>
 					`${(link.source as NodeObject).id} -> ${

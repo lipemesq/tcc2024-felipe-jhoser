@@ -1,5 +1,4 @@
 import example from "../public/examples/2.json";
-import { exec } from "child_process";
 
 // MARK: - Types
 
@@ -192,6 +191,7 @@ export const main = () => {
 	const exampleData: any = example;
 	let graph = Graph.fromJson(exampleData);
 
+	/*
 	function importPython() {
 		exec("python src/graphAlliance.py", (error, stdout, stderr) => {
 			if (error) {
@@ -205,6 +205,7 @@ export const main = () => {
 			console.log(`Resultado: ${stdout}`);
 		});
 	}
+	*/
 
 	console.log("Initial data:", graph);
 

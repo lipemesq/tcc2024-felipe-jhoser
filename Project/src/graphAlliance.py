@@ -24,17 +24,20 @@ def fpt_largest_defensive_alliance(G, k):
                 return subset  # Return as soon as we find the largest valid alliance
     return largest_alliance
 
-# Example: Finding the largest defensive alliance with size at most 4
-with open("public/examples/4", "r") as file:
-    string_data = file.read()  # Read the content of the file
-
 # G = string_to_graph(string_io_data)  # Pass the file-like object to the function
-G = nx.read_edgelist("public/examples/4")  # Ler diretamente do arquivo
+G = nx.read_edgelist("public/inputs/4.in")  # Ler diretamente do arquivo
 
-print("G = ", G)
-print("Vertices: ", G.nodes)
-print("Arestas: ", G.edges)
+debug = False
 
-k = 7
-result = fpt_largest_defensive_alliance(G, k)
-print("Maior aliança defensiva encontrada:", result)
+if (debug):
+    print("G = ", G)
+    print("Vertices: ", G.nodes)
+    print("Arestas: ", G.edges)
+
+    k = 7
+    result = fpt_largest_defensive_alliance(G, k)
+    print("Maior aliança defensiva encontrada:", result)
+
+else:
+    # G as json
+    print(nx.node_link_data(G))
