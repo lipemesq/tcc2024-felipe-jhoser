@@ -1,107 +1,87 @@
 import networkx as nx
 import math
 
-found = False  # Variável global para indicar se a aliança foi encontrada
-resultado_S = set()  # Variável global para armazenar a aliança encontrada
-
 def main(grafo, k):
-    global found, resultado_S
     n = len(grafo.nodes)
     i = 0
+    found = False
 
     while not found and i < n:
         v_i = list(grafo.nodes)[i]
         S = {v_i}
-        update_c_w(grafo, S)
+        update(grafo, S)
         c_v_i = grafo.nodes[v_i]['c_w']
         print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
-        DA(grafo, S, k)
+        found, resultado_S = DA(grafo, S, k)
         i += 1
 
     if found:
         print(f'Aliança defensiva encontrada: {resultado_S}')
+        print(f'Conjunto S é aliança: {is_defensive_alliance(grafo, resultado_S)}')
     else:
         print('Nenhuma aliança defensiva foi encontrada.')
 
 def DA(grafo, S, k):
-    global found, resultado_S
-    if found:
-        return
-
-    # Atualiza c_w antes de selecionar w
-    update_c_w(grafo, S)
-
-    # Verifica se todos os vértices em S estão defendidos
-    all_defended = all(grafo.nodes[v]['c_w'] <= 0 for v in S)
-
-    if all_defended and len(S) >= k:
-        found = True
-        resultado_S = S.copy()
-        print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
-        return
-
-    if len(S) >= k:
-        # Não podemos adicionar mais vértices, mas nem todos estão defendidos
-        return
-
     # Seleciona w em S que tem o maior valor de c_w
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
 
+    if c_w <= 0:
+        # Todos os vértices em S estão defendidos
+        print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
+        return True, S.copy()
+
     print(f'Analisando vértice {w} com c_w = {c_w} e |S| = {len(S)}')
 
-    # Verificar se podemos expandir S
     if c_w <= k - len(S):
         d_w = grafo.degree[w]
         t = math.ceil(d_w / 2) + 1
 
-        # Obter W
-        W = sorted(
-            [v for v in grafo.neighbors(w) if v not in S],
-            key=lambda v: math.floor((grafo.degree[v] + 1) / 2)
-        )
+        W = [v for v in grafo.neighbors(w) if v not in S]
 
-        print(f'Expandindo vizinhos de {w}, até {t} vizinhos podem ser adicionados.')
-
+        # Tenta expandir S adicionando cada vizinho de w que não está em S
         i = 0
-        while not found and i < len(W):
+        found = False
+        while not found and i < min(t, len(W)):
             w_i = W[i]
-            i += 1
-
-            # Salvar o estado atual
-            S_prev = S.copy()
-            c_w_backup = {v: grafo.nodes[v].get('c_w', None) for v in grafo.nodes}
-
             S.add(w_i)
             print(f'Adicionando vértice {w_i} à aliança {S}')
-            update_c_w(grafo, S)
+            update(grafo, S)
 
-            DA(grafo, S, k)
+            found, resultado_S = DA(grafo, S, k)
 
             if not found:
-                # Restaurar o estado
-                S = S_prev
-                for v in grafo.nodes:
-                    if c_w_backup[v] is not None:
-                        grafo.nodes[v]['c_w'] = c_w_backup[v]
-                    else:
-                        grafo.nodes[v].pop('c_w', None)
+                S.remove(w_i)
+                update(grafo, S)
                 print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
             else:
-                return  # Se found é True, não precisamos continuar
-    else:
-        # Não é possível expandir S para obter uma aliança defensiva de tamanho k
-        return
+                return True, resultado_S  # Aliança encontrada
+            i += 1
 
-def update_c_w(grafo, S):
+        # Se tentamos todos os vizinhos e não encontramos uma aliança, retrocede
+        return False, None
+    else:
+        # Caso c_w > k - len(S), não é possível expandir S
+        return False, None
+
+def update(grafo, S):
     for v in S:
-        grau_v = grafo.degree[v]
-        required_neighbors = math.floor((grau_v + 1) / 2)
-        neighbors_in_S = set(grafo.neighbors(v)) & S
-        num_neighbors_in_S = len(neighbors_in_S)
-        c_v = required_neighbors - num_neighbors_in_S
+        Nv = set(grafo.neighbors(v))
+        required_neighbors = math.ceil(grafo.degree[v] / 2)
+        Nv_in_S = Nv & S
+        c_v = required_neighbors - len(Nv_in_S)
         grafo.nodes[v]['c_w'] = c_v
-        print(f'Atualizando vértice {v}, novo c_w = {c_v}, vizinhos em S (incluindo v): {num_neighbors_in_S}, requerido: {required_neighbors}')
+        print(f'Atualizando vértice {v}, novo c_w = {c_v}, vizinhos em S: {len(Nv_in_S)}, requerido: {required_neighbors}')
+
+
+def is_defensive_alliance(G, S):
+    for v in S:
+        neighbors_in_S = sum(1 for neighbor in G[v] if neighbor in S)
+        neighbors_outside_S = len(G[v]) - neighbors_in_S
+        if neighbors_in_S < neighbors_outside_S:
+            return False
+    return True
+
 
 def read_graph(json_data):
     G = nx.Graph()
