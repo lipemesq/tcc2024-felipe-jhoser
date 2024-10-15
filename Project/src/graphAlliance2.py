@@ -26,7 +26,7 @@ def DA(grafo, S, k):
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
 
-    if c_w <= 0:
+    if c_w <= 0 and len(S) == k:
         # Todos os vértices em S estão defendidos
         print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
@@ -51,9 +51,9 @@ def DA(grafo, S, k):
             found, resultado_S = DA(grafo, S, k)
 
             if not found:
+                print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
                 S.remove(w_i)
                 update(grafo, S)
-                print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
             else:
                 return True, resultado_S  # Aliança encontrada
             i += 1
@@ -67,7 +67,8 @@ def DA(grafo, S, k):
 def update(grafo, S):
     for v in S:
         Nv = set(grafo.neighbors(v))
-        required_neighbors = math.ceil(grafo.degree[v] / 2)
+        n_vizinhos = grafo.degree[v]
+        required_neighbors = math.ceil(n_vizinhos / 2)
         Nv_in_S = Nv & S
         c_v = required_neighbors - len(Nv_in_S)
         grafo.nodes[v]['c_w'] = c_v
@@ -82,55 +83,20 @@ def is_defensive_alliance(G, S):
             return False
     return True
 
+G = nx.read_edgelist("public/inputs/7.in")  # Ler diretamente do arquivo
+k = 5
+r = main(G, k)
 
-def read_graph(json_data):
-    G = nx.Graph()
+showJson = True
 
-    for node in json_data['nodes']:
-        G.add_node(node['id'])
+if (showJson):
+    print("\n", nx.node_link_data(G, edges="links"))
 
-    for link in json_data['links']:
-        G.add_edge(link['source'], link['target'])
+else:
+    print(r)
+    
 
-    return G
-
-if __name__ == "__main__":
-    json_grafo = {
-        "nodes": [{"id": i} for i in range(15)],
-        "links": [
-            {"source": 0, "target": 3},
-            {"source": 0, "target": 2},
-            {"source": 0, "target": 9},
-            {"source": 0, "target": 7},
-            {"source": 1, "target": 8},
-            {"source": 1, "target": 14},
-            {"source": 1, "target": 3},
-            {"source": 1, "target": 9},
-            {"source": 2, "target": 7},
-            {"source": 3, "target": 12},
-            {"source": 3, "target": 10},
-            {"source": 3, "target": 14},
-            {"source": 4, "target": 12},
-            {"source": 4, "target": 10},
-            {"source": 5, "target": 13},
-            {"source": 5, "target": 12},
-            {"source": 5, "target": 9},
-            {"source": 5, "target": 7},
-            {"source": 6, "target": 9},
-            {"source": 6, "target": 14},
-            {"source": 6, "target": 7},
-            {"source": 7, "target": 8},
-            {"source": 7, "target": 10},
-            {"source": 8, "target": 11},
-            {"source": 10, "target": 11},
-            {"source": 10, "target": 14},
-            {"source": 10, "target": 13},
-            {"source": 10, "target": 12},
-            {"source": 11, "target": 12},
-            {"source": 13, "target": 14}
-        ]
-    }
-
-    G = read_graph(json_grafo)
-    k = 5
-    main(G, k)
+# testar inputs em https://csacademy.com/app/graph_editor/
+# inputs, testados com tamanho k=5: 
+# k5 tem alianças de tamanho 4 e 5, iniciando do 0
+# 6.in e 7.in tbm

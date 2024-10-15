@@ -12,16 +12,19 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 - Dia ==03/outubro==
 	1. [x] Definir a representação de uma aliança em objetos.
 		1. [ ] Documentar
-	2. [ ] Melhorar a visualização da aliança e programar para funcionar de forma genérica.
-		1. [ ] Setas para as fronteiras, definir esquema de cores, tamanho dos nós.
+	2. [x] Melhorar a visualização da aliança e programar para funcionar de forma genérica.
+		1. [x] Setas para as fronteiras, definir esquema de cores, tamanho dos nós.
 - Dia ==10/outubro==
 	1. [ ] Ter um algoritmo de busca de aliança (defensiva ou ofensiva) em um grafo em tempo polinomial.
 		1. [ ] Documentar
 	2. [ ] Representar visualmente esse resultado de forma reativa.
 		1. [ ] Documentar?
-- Dia 17/outubro
+- Dia ==17/outubro==
 	1. [ ] Combinar e iniciar processo de escrita do documento de entrega final.
-	2. [ ] Continuar / expandir os mecanismos de busca de aliança.
+	2. [ ] Continuar / expandir os mecanismos de busca de aliança
+- Dia ==24/outubro==
+	1. [ ] Rever os algoritmos (caso bom, fazer outro tipo, caso ruim, terminar a defensiva !!!!!!)
+	2. [ ] Continuar a escrita
 - ... expandir a aliança nó-a-nó de forma animada?
 
 #### Tarefas extras
@@ -29,4 +32,4 @@ Fazer quando tiver tempo depois de terminar os itens daquela semana
 
 - [ ] Colocar um plugin de calendário aqui
 - [ ] Colocar versionamento nessa nota
-- [ ] Subir isso no github?
+- [x] Subir isso no github?
