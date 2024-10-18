@@ -15,21 +15,34 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 	2. [x] Melhorar a visualização da aliança e programar para funcionar de forma genérica.
 		1. [x] Setas para as fronteiras, definir esquema de cores, tamanho dos nós.
 - Dia ==10/outubro==
-	1. [ ] Ter um algoritmo de busca de aliança (defensiva ou ofensiva) em um grafo em tempo polinomial.
+	1. [x] Ter um algoritmo de busca de aliança (defensiva ou ofensiva) em um grafo em tempo polinomial.
 		1. [ ] Documentar
-	2. [ ] Representar visualmente esse resultado de forma reativa.
+	2. [x] Representar visualmente esse resultado de forma reativa.
 		1. [ ] Documentar?
 - Dia ==17/outubro==
-	1. [ ] Combinar e iniciar processo de escrita do documento de entrega final.
-	2. [ ] Continuar / expandir os mecanismos de busca de aliança
+	1. [x] Combinar e iniciar processo de escrita do documento de entrega final.
+	2. [x] Visualizar passo a passo o algoritmo
 - Dia ==24/outubro==
-	1. [ ] Rever os algoritmos (caso bom, fazer outro tipo, caso ruim, terminar a defensiva !!!!!!)
-	2. [ ] Continuar a escrita
+	1. [ ] Fazer as mudanças simples no algoritmo para "publicação".
+		1. [ ] Contador de nós processados.
+		2. [ ] Habilitar alianças < k ou não.
+		3. [ ] Ordenar os vizinhos.
+		4. [ ] Evitar repetir conjuntos.
+		5. [ ] Mandar o grafo por stdin.
+		6. [ ] Definir k por stdin.
+		7. [ ] Definir 0 < x < k < n por stdin.
+	3. [ ] Criar a estrutura/esqueleto do texto.
+- Dia ==31/outubro==
+	1. [ ] Ter as definições e o desenvolvimento já legíveis.
+	2. [ ] Arrumar os bugs UI do projeto.
+- Dia ==14/novembro==
+	1. [ ] Remodelar para algoritmo não recursivo (pilha ou fila).
+	2. [ ] Adicionar os grafos tradicionais como exemplos no projeto.
 - ... expandir a aliança nó-a-nó de forma animada?
 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana
 
 - [ ] Colocar um plugin de calendário aqui
-- [ ] Colocar versionamento nessa nota
+- [x] Colocar versionamento nessa nota
 - [x] Subir isso no github?

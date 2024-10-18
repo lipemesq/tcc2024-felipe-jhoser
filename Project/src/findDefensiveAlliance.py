@@ -33,7 +33,7 @@ def DA(grafo, S, k, S_history):
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
 
-    if c_w <= 0 and len(S) == k:
+    if c_w <= 0 and len(S) == k: # TODO: Manter o limitador?
         # Todos os vértices em S estão defendidos
         print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
@@ -92,7 +92,7 @@ def is_defensive_alliance(G, S):
             return False
     return True
 
-G = nx.read_edgelist("public/inputs/7.in")  # Ler diretamente do arquivo
+G = nx.read_edgelist("public/inputs/6.in")  # Ler diretamente do arquivo
 k = 5
 r, steps = main(G, k)
 

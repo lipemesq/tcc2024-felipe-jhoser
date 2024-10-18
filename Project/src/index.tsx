@@ -26,6 +26,7 @@ const App: React.FC = () => {
 	const [state, setState] = useState<Graph>(new Graph([], []));
 	const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
 	const [step, setStep] = useState<number>(0);
+	var maxSteps: number = -1;
 
 	const [allianceColors, setAllianceColors] = useState<string[]>([]);
 
@@ -95,7 +96,10 @@ const App: React.FC = () => {
 			const node: Node | undefined = state.findNodeById(nodeObject.id);
 
 			if (node && state.steps && state.steps[step].includes(node.id)) {
-				return "red";
+				if (step == maxSteps)
+					return "green";
+				else
+					return "red";
 			}
 			/*const nodeAlliance = node?.alliance;
 			if (nodeAlliance !== undefined) {
@@ -126,30 +130,43 @@ const App: React.FC = () => {
 		(linkObject: LinkObject): number => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
-			if (
-				sourceNode?.alliance !== undefined &&
-				sourceNode?.alliance === targetNode?.alliance
-			)
+			// if (
+			// 	sourceNode?.alliance !== undefined &&
+			// 	sourceNode?.alliance === targetNode?.alliance
+			// )
+			// 	return 3;
+
+			if (sourceNode && state.steps && state.steps[step].includes(sourceNode.id) && targetNode && state.steps[step].includes(targetNode.id)) {
 				return 3;
+			}
 
 			return 1;
 		},
-		[state]
+		[state, step]
 	);
 
 	const decideLinkColor = useCallback(
 		(linkObject: LinkObject): string => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
-			if (
-				sourceNode?.alliance !== undefined &&
-				sourceNode?.alliance === targetNode?.alliance
-			)
-				return allianceColors[targetNode?.alliance];
+			// if (
+			// 	sourceNode?.alliance !== undefined &&
+			// 	sourceNode?.alliance === targetNode?.alliance
+			// )
+			if (state.steps &&
+				state.steps[step].includes(sourceNode!.id) &&
+				state.steps[step].includes(targetNode!.id)
+			) {
+				if (step == maxSteps)
+					return "green";
+				else
+					return "red";
+			}
+			// return allianceColors[targetNode?.alliance];
 
 			return "grey";
 		},
-		[allianceColors]
+		[allianceColors, step]
 	);
 
 	return (
@@ -165,12 +182,12 @@ const App: React.FC = () => {
 				handleRightArrowClick={function (): void {
 					if (step < (state.steps || []).length - 1)
 						setStep(step + 1);
+					maxSteps = (state.steps || []).length - 1;
 				}}
 			/>
 			<ForceGraph2D
 				linkLabel={(link) =>
-					`${(link.source as NodeObject).id} -> ${
-						(link.target as NodeObject).id
+					`${(link.source as NodeObject).id} -> ${(link.target as NodeObject).id
 					}`
 				}
 				nodeLabel={(node) => `Node ${node.id}`}
