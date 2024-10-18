@@ -36,11 +36,18 @@ export class Graph {
 	nodes: Node[];
 	links: Link[];
 	defensiveAlliances?: Alliance[];
+	steps?: number[][];
 
-	constructor(nodes: Node[], links: Link[], defensiveAlliances?: Alliance[]) {
+	constructor(
+		nodes: Node[],
+		links: Link[],
+		defensiveAlliances?: Alliance[],
+		steps?: number[][]
+	) {
 		this.nodes = nodes;
 		this.links = links;
 		this.defensiveAlliances = defensiveAlliances;
+		this.steps = steps;
 	}
 
 	/**
@@ -60,16 +67,14 @@ export class Graph {
 			);
 			return new Link(sourceNode, targetNode);
 		});
-		const defensiveAlliances = json.defensiveAlliances?.map(
-			(alliance: any) => {
-				const allianceNodes = alliance.nodes.map(
-					(nodeId: number) =>
-						nodes.find((node: any) => node.id === nodeId).id
-				);
+		const steps = json.steps.map((s: any) => s.map((id: any) => id));
+		const defensiveAlliances =
+			json.defensiveAlliances?.map((alliance: any) => {
+				const allianceNodes = alliance.nodes;
 				return new Alliance(alliance.id, allianceNodes);
-			}
-		);
-		const graph = new Graph(nodes, links, defensiveAlliances);
+			}) || [];
+
+		const graph = new Graph(nodes, links, defensiveAlliances, steps);
 		graph.prepareGraph();
 		return graph;
 	}
@@ -117,7 +122,8 @@ export class Graph {
 		return new Graph(
 			graph.nodes,
 			graph.links,
-			graph.defensiveAlliances || []
+			graph.defensiveAlliances || [],
+			graph.steps
 		);
 	}
 

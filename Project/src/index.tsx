@@ -25,6 +25,7 @@ interface GraphData {
 const App: React.FC = () => {
 	const [state, setState] = useState<Graph>(new Graph([], []));
 	const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
+	const [step, setStep] = useState<number>(0);
 
 	const [allianceColors, setAllianceColors] = useState<string[]>([]);
 
@@ -92,13 +93,18 @@ const App: React.FC = () => {
 	const decideNodeColor = useCallback(
 		(nodeObject: NodeObject) => {
 			const node: Node | undefined = state.findNodeById(nodeObject.id);
-			const nodeAlliance = node?.alliance;
+
+			if (node && state.steps && state.steps[step].includes(node.id)) {
+				return "red";
+			}
+			/*const nodeAlliance = node?.alliance;
 			if (nodeAlliance !== undefined) {
 				return allianceColors[nodeAlliance];
 			}
+			*/
 			return "grey";
 		},
-		[allianceColors]
+		[allianceColors, step]
 	);
 
 	const decideLinkDirectionalArrowLength = useCallback(
@@ -124,7 +130,7 @@ const App: React.FC = () => {
 				sourceNode?.alliance !== undefined &&
 				sourceNode?.alliance === targetNode?.alliance
 			)
-				return 2;
+				return 3;
 
 			return 1;
 		},
@@ -139,11 +145,11 @@ const App: React.FC = () => {
 				sourceNode?.alliance !== undefined &&
 				sourceNode?.alliance === targetNode?.alliance
 			)
-				return allianceColors[sourceNode?.alliance];
+				return allianceColors[targetNode?.alliance];
 
 			return "grey";
 		},
-		[state, allianceColors]
+		[allianceColors]
 	);
 
 	return (
@@ -153,6 +159,13 @@ const App: React.FC = () => {
 				handleFileSelected={handleFileSelected}
 				fileSelectorLabel={fileSelectorLabel}
 				handleFileImported={handleFileImported}
+				handleLeftArrowClick={function (): void {
+					if (step > 0) setStep(step - 1);
+				}}
+				handleRightArrowClick={function (): void {
+					if (step < (state.steps || []).length - 1)
+						setStep(step + 1);
+				}}
 			/>
 			<ForceGraph2D
 				linkLabel={(link) =>

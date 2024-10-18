@@ -5,6 +5,8 @@ interface ButtonsViewInterface {
 	handleFileSelected: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	fileSelectorLabel: string;
 	handleFileImported: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	handleLeftArrowClick: () => void; // New handler for left arrow
+	handleRightArrowClick: () => void; // New handler for right arrow
 }
 
 const ButtonsView: React.FC<ButtonsViewInterface> = ({
@@ -12,6 +14,8 @@ const ButtonsView: React.FC<ButtonsViewInterface> = ({
 	handleFileSelected,
 	fileSelectorLabel,
 	handleFileImported,
+	handleLeftArrowClick,
+	handleRightArrowClick,
 }) => {
 	return (
 		<div
@@ -57,6 +61,35 @@ const ButtonsView: React.FC<ButtonsViewInterface> = ({
 					width: "auto",
 				}}
 			/>
+			<div
+				style={{
+					position: "fixed",
+					top: "25px",
+					right: "25px",
+					display: "flex",
+					flexDirection: "row",
+				}}
+			>
+				<button
+					onClick={handleLeftArrowClick}
+					style={{
+						fontSize: "16px", // Increase font size
+						padding: "8px 16px", // Increase padding for larger button
+					}}
+				>
+					&#8592;
+				</button>
+				<button
+					onClick={handleRightArrowClick}
+					style={{
+						fontSize: "16px", // Increase font size
+						padding: "8px 16px", // Increase padding for larger button
+						marginLeft: "16px",
+					}}
+				>
+					&#8594;
+				</button>
+			</div>
 		</div>
 	);
 };
