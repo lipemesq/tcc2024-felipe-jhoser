@@ -96,10 +96,8 @@ const App: React.FC = () => {
 			const node: Node | undefined = state.findNodeById(nodeObject.id);
 
 			if (node && state.steps && state.steps[step].includes(node.id)) {
-				if (step == maxSteps)
-					return "green";
-				else
-					return "red";
+				if (step == maxSteps) return "green";
+				else return "red";
 			}
 			/*const nodeAlliance = node?.alliance;
 			if (nodeAlliance !== undefined) {
@@ -115,15 +113,22 @@ const App: React.FC = () => {
 		(linkObject: LinkObject): number => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
+			// if (
+			// 	sourceNode?.alliance == undefined &&
+			// 	targetNode?.alliance != undefined
+			// )
 			if (
-				sourceNode?.alliance == undefined &&
-				targetNode?.alliance != undefined
+				sourceNode &&
+				state.steps &&
+				!state.steps[step].includes(sourceNode.id) &&
+				targetNode &&
+				state.steps[step].includes(targetNode.id)
 			)
-				return 3;
+				return 0; //3;
 
 			return 0;
 		},
-		[state]
+		[state, step]
 	);
 
 	const decideLinkWidth = useCallback(
@@ -136,7 +141,13 @@ const App: React.FC = () => {
 			// )
 			// 	return 3;
 
-			if (sourceNode && state.steps && state.steps[step].includes(sourceNode.id) && targetNode && state.steps[step].includes(targetNode.id)) {
+			if (
+				sourceNode &&
+				state.steps &&
+				state.steps[step].includes(sourceNode.id) &&
+				targetNode &&
+				state.steps[step].includes(targetNode.id)
+			) {
 				return 3;
 			}
 
@@ -153,14 +164,13 @@ const App: React.FC = () => {
 			// 	sourceNode?.alliance !== undefined &&
 			// 	sourceNode?.alliance === targetNode?.alliance
 			// )
-			if (state.steps &&
+			if (
+				state.steps &&
 				state.steps[step].includes(sourceNode!.id) &&
 				state.steps[step].includes(targetNode!.id)
 			) {
-				if (step == maxSteps)
-					return "green";
-				else
-					return "red";
+				if (step == maxSteps) return "green";
+				else return "red";
 			}
 			// return allianceColors[targetNode?.alliance];
 
@@ -180,14 +190,16 @@ const App: React.FC = () => {
 					if (step > 0) setStep(step - 1);
 				}}
 				handleRightArrowClick={function (): void {
-					if (step < (state.steps || []).length - 1)
+					if (step < (state.steps || []).length - 1) {
+						maxSteps = (state.steps || []).length - 1;
 						setStep(step + 1);
-					maxSteps = (state.steps || []).length - 1;
+					}
 				}}
 			/>
 			<ForceGraph2D
 				linkLabel={(link) =>
-					`${(link.source as NodeObject).id} -> ${(link.target as NodeObject).id
+					`${(link.source as NodeObject).id} -> ${
+						(link.target as NodeObject).id
 					}`
 				}
 				nodeLabel={(node) => `Node ${node.id}`}

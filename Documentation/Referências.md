@@ -5,3 +5,6 @@ Nossa pesquisa e implementação se baseia principalmente em três artigos, que 
 
 \[2] [Partitioning A Graph In Alliances And Its Application To Data Clustering](https://stars.library.ucf.edu/cgi/viewcontent.cgi?article=1191&context=etd)
 	 Capítulos 1-5, para aprendizado em geral de grafos e alianças.
+
+\[3] [Alliances in graphs: Parameters, properties and applications—A survey](https://www.sciencedirect.com/science/article/pii/S0972860016301621)
+	Capítulo 1.1, história e aplicações de aliança
