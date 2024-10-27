@@ -1,7 +1,7 @@
 
 # Titulo
 Felipe Mesquita, GRR20174479
-Jhoser Allaf, GRR
+Jhoser Allaf, GRR20166838
 
 ## Resumo
 	Resumo em português (e inglês?)
@@ -38,6 +38,25 @@ debugInConsole: false # Print debug info in Obsidian console
 		propriedades
 	Definir o que são alianças defensivas
 	Apresentar o algoritmo e explicar funcionamento
+	Algumas definições importantes
+	**Grafo (Graph)**: Um Grafo é uma estrutura composta por um conjunto de vértices V e um conjunto de arestas E que conectam pares de vértices. Formalmente, um grafo é representado como G=(V,E).
+	**Vértice (Vertex)**: Um elemento básico de um grafo que representa um ponto ou nó.
+	**Aresta (Edge or Link)**: Uma conexão entre dois vértices em um grafo, podendo ser direcionada ou não.
+	**Vizinhança de um Vértice (Neighborhood of a Vertex)**: O conjunto de todos os vértices adjacentes a um dado vértice v, denotado por N(v).
+	**Grau de um Vértice (Degree of a Vertex)**: O número de arestas incidentes a um vértice v. Em grafos não direcionados, é igual ao número de vizinhos de v.
+	**Subgrafo (Subgraph)**: Um grafo formado a partir de um subconjunto dos vértices e arestas de um grafo original.
+		***Definir de maineira mais formal***
+	**Aliança em Grafos (Graph Alliance)**: Um subconjunto de vértices que satisfaz certas propriedades de vizinhança e conectividade, dependendo do tipo específico de aliança, as alianças podem ser classificadas em Defensiva, Ofensiva, Forte e Global .
+	**Aliança Defensiva (Defensive Alliance)**: Um subconjunto S \subseteq V tal que, para cada vértice v nE S, a seguinte condição é satisfeita:
+		Colocar em notação matematica
+		|N(v) \disjoint S| >= |N(v) \diference S|
+	Isso indica que os vertices v na aliança devem possuir pelo menos tantos vertices dentro da aliança quanto fora dela.
+	Outras definições a serem avaliadas
+		**Conectividade**??
+		**Algoritmos de Busca** DFS e BFS??	
+		**Complexidade Computacional**
+		**NP-Completude**
+		**Demais notações utilizadas nas referências**
 
 ## Metodologia
 	Apresentar o plano
