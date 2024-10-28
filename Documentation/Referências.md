@@ -8,3 +8,6 @@ Nossa pesquisa e implementação se baseia principalmente em três artigos, que 
 
 \[3] [Alliances in graphs: Parameters, properties and applications—A survey](https://www.sciencedirect.com/science/article/pii/S0972860016301621)
 	Capítulo 1.1, história e aplicações de aliança
+
+\[4] [react-force-graph](https://github.com/vasturiano/react-force-graph)
+	Biblioteca reativa que implementa uma div (em HTML) que permite a visualização personalizada de um grafo em ambos 2D e 3D.

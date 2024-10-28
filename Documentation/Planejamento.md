@@ -31,7 +31,7 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 		5. [ ] Mandar o grafo por stdin.
 		6. [ ] Definir k por stdin.
 		7. [ ] Definir 0 < x < k < n por stdin.
-	3. [ ] Criar a estrutura/esqueleto do texto.
+	3. [x] Criar a estrutura/esqueleto do texto.
 - Dia ==31/outubro==
 	1. [ ] Ter as definições e o desenvolvimento já legíveis.
 	2. [ ] Arrumar os bugs UI do projeto.
@@ -43,6 +43,6 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana
 
-- [ ] Colocar um plugin de calendário aqui
+- [x] (Removido) Colocar um plugin de calendário aqui
 - [x] Colocar versionamento nessa nota
 - [x] Subir isso no github?

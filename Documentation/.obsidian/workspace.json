@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Conhecimentos.md",
+                "file": "Planejamento.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Conhecimentos"
+              "title": "Planejamento"
             }
           },
           {
@@ -27,26 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Artigo.md",
+                "file": "Planejamento.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Artigo"
-            }
-          },
-          {
-            "id": "0fcfc6b4bf51bad9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Conhecimentos.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Conhecimentos"
+              "title": "Planejamento"
             }
           },
           {
@@ -63,8 +49,7 @@
               "title": "Referências"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -86,7 +71,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "Explorador de arquivos"
             }
           },
           {
@@ -158,18 +143,18 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "command-palette:Open command palette": false,
-      "markdown-importer:Open format converter": false
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "markdown-importer:Abrir importador Markdown": false
     }
   },
-  "active": "24d80f2d4d5787ce",
+  "active": "1868fc46e6888378",
   "lastOpenFiles": [
-    "Conhecimentos.md",
-    "Referências.md",
     "Artigo.md",
-    "Planejamento.md"
+    "Conhecimentos.md",
+    "Planejamento.md",
+    "Referências.md"
   ]
 }
