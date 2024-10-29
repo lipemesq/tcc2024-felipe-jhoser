@@ -4,12 +4,14 @@ import math
 import json
 
 debugSteps = False
+explored_nodes = 0
 
 def main(grafo, k):
     n = len(grafo.nodes)
     i = 0
     found = False
     resultado_S = None
+    global explored_nodes
     S_history = []  # List to store the history of S
 
     while not found and i < n:
@@ -19,11 +21,14 @@ def main(grafo, k):
         S_history.append(S.copy())  # Record the initial state of S
         c_v_i = grafo.nodes[v_i]['c_w']
         if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
+        explored_nodes += 1
         found, resultado_S = DA(grafo, S, k, S_history)
         i += 1
     return found, resultado_S, S_history
 
 def DA(grafo, S, k, S_history):
+    global explored_nodes
+    
     # Seleciona w em S que tem o maior valor de c_w
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
@@ -50,6 +55,7 @@ def DA(grafo, S, k, S_history):
             if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
             S_history.append(S.copy())  # Record the state of S after adding a vertex
             update(grafo, S)
+            explored_nodes += 1
 
             found, resultado_S = DA(grafo, S, k, S_history)
 
@@ -112,7 +118,8 @@ if __name__ == "__main__":
         if found and resultAlliance is not None:
             print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
             print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
-            print("Histórico de S:", steps)  # Print the history of S
+            print(f'Número de nós explorados: {explored_nodes}')
+            print(f'Histórico de S ({len(steps)} passos): {steps}')  # Print the history of S
 
         else:
             print('Nenhuma aliança defensiva foi encontrada.')
