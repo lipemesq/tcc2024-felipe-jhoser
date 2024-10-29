@@ -7,8 +7,6 @@
 	$c_w$
 	Número de vizinhos de $w$ que precisam ser adicionados a $S$ para que $w$ fique protegido.
 
-
-
 #### Algoritmo FPT de aliança defensiva
 
 Passa de vértice em vértice e tenta expandi-lo em uma aliança defensiva de tamanho $k$. Se der, devolve a aliança.

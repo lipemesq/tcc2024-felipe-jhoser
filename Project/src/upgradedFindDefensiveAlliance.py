@@ -5,6 +5,7 @@ import json
 
 debugSteps = False
 explored_nodes = 0
+allowSmallerAlliances = False
 
 def main(grafo, k):
     n = len(grafo.nodes)
@@ -33,7 +34,7 @@ def DA(grafo, S, k, S_history):
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
 
-    if c_w <= 0 and len(S) == k: # TODO: Manter o limitador?
+    if c_w <= 0 and (len(S) == k or allowSmallerAlliances): # TODO: Manter o limitador?
         # Todos os vértices em S estão defendidos
         if debugSteps: print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
@@ -98,11 +99,13 @@ def parse_arguments():
     parser.add_argument('--k', type=int, default=5, help='Largest size of the defensive alliance to find')
     parser.add_argument('--showAsJson', action='store_true', help='Show the result in JSON format')
     parser.add_argument('--debugSteps', action='store_true', help='Print steps along the way')
+    parser.add_argument('--allowSmallerAlliances', action='store_true', help='Allow the algorithm to stops when finds a defensive alliance with size < k')
     return parser.parse_args()
 
 if __name__ == "__main__":
     args = parse_arguments()
     debugSteps = args.debugSteps
+    allowSmallerAlliances = args.allowSmallerAlliances
     
     G = nx.read_edgelist(args.input_file)
     found, resultAlliance, steps = main(G, args.k)

@@ -24,12 +24,12 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 	2. [x] Visualizar passo a passo o algoritmo
 - Dia ==24/outubro==
 	1. [ ] Fazer as mudanças simples no algoritmo para "publicação".
-		1. [ ] Contador de nós processados.
-		2. [ ] Habilitar alianças < k ou não.
+		1. [x] Contador de nós processados.
+		2. [x] Habilitar alianças < k ou não.
 		3. [ ] Ordenar os vizinhos.
 		4. [ ] Evitar repetir conjuntos.
-		5. [ ] Mandar o grafo por stdin.
-		6. [ ] Definir k por stdin.
+		5. [x] Mandar o grafo por stdin.
+		6. [x] Definir k por stdin.
 		7. [ ] Definir 0 < x < k < n por stdin.
 	3. [x] Criar a estrutura/esqueleto do texto.
 - Dia ==31/outubro==
