@@ -2,11 +2,14 @@ import networkx as nx
 import math
 import json
 
+explored_nodes = 0
+
 def main(grafo, k):
     n = len(grafo.nodes)
     i = 0
     found = False
     resultado_S = None
+    global explored_nodes
     S_history = []  # List to store the history of S
 
     while not found and i < n:
@@ -16,11 +19,13 @@ def main(grafo, k):
         S_history.append(S.copy())  # Record the initial state of S
         c_v_i = grafo.nodes[v_i]['c_w']
         print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
+        explored_nodes += 1
         found, resultado_S = DA(grafo, S, k, S_history)
         i += 1
 
     if found:
         print(f'Aliança defensiva encontrada: {resultado_S}')
+        print(f'Número de nós explorados: {explored_nodes}')
         print(f'Conjunto S é aliança: {is_defensive_alliance(grafo, resultado_S)}')
     else:
         print('Nenhuma aliança defensiva foi encontrada.')
@@ -29,6 +34,7 @@ def main(grafo, k):
     return resultado_S, S_history
 
 def DA(grafo, S, k, S_history):
+    global explored_nodes
     # Seleciona w em S que tem o maior valor de c_w
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
@@ -55,6 +61,7 @@ def DA(grafo, S, k, S_history):
             print(f'Adicionando vértice {w_i} à aliança {S}')
             S_history.append(S.copy())  # Record the state of S after adding a vertex
             update(grafo, S)
+            explored_nodes += 1
 
             found, resultado_S = DA(grafo, S, k, S_history)
 
