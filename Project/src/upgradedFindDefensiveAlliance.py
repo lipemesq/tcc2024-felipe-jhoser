@@ -1,6 +1,9 @@
+import argparse
 import networkx as nx
 import math
 import json
+
+debugSteps = False
 
 def main(grafo, k):
     n = len(grafo.nodes)
@@ -15,18 +18,10 @@ def main(grafo, k):
         update(grafo, S)
         S_history.append(S.copy())  # Record the initial state of S
         c_v_i = grafo.nodes[v_i]['c_w']
-        print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
+        if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
         found, resultado_S = DA(grafo, S, k, S_history)
         i += 1
-
-    if found:
-        print(f'Aliança defensiva encontrada: {resultado_S}')
-        print(f'Conjunto S é aliança: {is_defensive_alliance(grafo, resultado_S)}')
-    else:
-        print('Nenhuma aliança defensiva foi encontrada.')
-
-    print("Histórico de S:", S_history)  # Print the history of S
-    return resultado_S, S_history
+    return found, resultado_S, S_history
 
 def DA(grafo, S, k, S_history):
     # Seleciona w em S que tem o maior valor de c_w
@@ -35,10 +30,10 @@ def DA(grafo, S, k, S_history):
 
     if c_w <= 0 and len(S) == k: # TODO: Manter o limitador?
         # Todos os vértices em S estão defendidos
-        print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
+        if debugSteps: print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
 
-    print(f'Analisando vértice {w} com c_w = {c_w} e |S| = {len(S)}')
+    if debugSteps: print(f'Analisando vértice {w} com c_w = {c_w} e |S| = {len(S)}')
 
     if c_w <= k - len(S):
         d_w = grafo.degree[w]
@@ -52,14 +47,14 @@ def DA(grafo, S, k, S_history):
         while not found and i < min(t, len(W)):
             w_i = W[i]
             S.add(w_i)
-            print(f'Adicionando vértice {w_i} à aliança {S}')
+            if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
             S_history.append(S.copy())  # Record the state of S after adding a vertex
             update(grafo, S)
 
             found, resultado_S = DA(grafo, S, k, S_history)
 
             if not found:
-                print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
+                if debugSteps: print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
                 S.remove(w_i)
                 S_history.append(S.copy())  # Record the state of S after removing a vertex
                 update(grafo, S)
@@ -81,8 +76,7 @@ def update(grafo, S):
         Nv_in_S = Nv & S
         c_v = required_neighbors - len(Nv_in_S)
         grafo.nodes[v]['c_w'] = c_v
-        print(f'Atualizando vértice {v}, novo c_w = {c_v}, vizinhos em S: {len(Nv_in_S)}, requerido: {required_neighbors}')
-
+        if debugSteps: print(f'Atualizando vértice {v}, novo c_w = {c_v}, vizinhos em S: {len(Nv_in_S)}, requerido: {required_neighbors}')
 
 def is_defensive_alliance(G, S):
     for v in S:
@@ -92,18 +86,36 @@ def is_defensive_alliance(G, S):
             return False
     return True
 
-G = nx.read_edgelist("public/inputs/6.in")  # Ler diretamente do arquivo
-k = 5
-r, steps = main(G, k)
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Find the first defensive alliance with size of at most k in a graph.')
+    parser.add_argument('input_file', type=str, help='Path to the input file')
+    parser.add_argument('--k', type=int, default=5, help='Largest size of the defensive alliance to find')
+    parser.add_argument('--showAsJson', action='store_true', help='Show the result in JSON format')
+    parser.add_argument('--debugSteps', action='store_true', help='Print steps along the way')
+    return parser.parse_args()
 
-showJson = True
+if __name__ == "__main__":
+    args = parse_arguments()
+    debugSteps = args.debugSteps
+    
+    G = nx.read_edgelist(args.input_file)
+    found, resultAlliance, steps = main(G, args.k)
 
-if showJson:
-    jsonResult = nx.node_link_data(G)
-    jsonResult["steps"] = [list(step) for step in steps] # type: ignore
-    print(json.dumps(jsonResult))  # Print the JSON result
-else:
-    print(r)
+    if args.showAsJson:
+        if found:
+            jsonResult = nx.node_link_data(G)
+            jsonResult["steps"] = [list(step) for step in steps]  # type: ignore
+            print(json.dumps(jsonResult))  # Print the JSON result
+        else:
+            print("{}")
+    else:
+        if found and resultAlliance is not None:
+            print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
+            print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
+            print("Histórico de S:", steps)  # Print the history of S
+
+        else:
+            print('Nenhuma aliança defensiva foi encontrada.')
 
 # testar inputs em https://csacademy.com/app/graph_editor/
 # inputs, testados com tamanho k=5: 
