@@ -2,24 +2,25 @@ import argparse
 import networkx as nx
 import math
 import json
+from typing import Tuple, Optional, Set, List, Dict
 
 debugSteps = False
 explored_nodes = 0
 allowSmallerAlliances = False
 
-def main(grafo, k):
+def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
     n = len(grafo.nodes)
     i = 0
     found = False
     resultado_S = None
     global explored_nodes
-    S_history = []  # List to store the history of S
+    S_history = []  # Modified to store c_w of each node at the current moment
 
     while not found and i < n:
         v_i = list(grafo.nodes)[i]
         S = {v_i}
         update(grafo, S)
-        S_history.append(S.copy())  # Record the initial state of S
+        S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
         c_v_i = grafo.nodes[v_i]['c_w']
         if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
         explored_nodes += 1
@@ -54,17 +55,17 @@ def DA(grafo, S, k, S_history):
             w_i = W[i]
             S.add(w_i)
             if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
-            S_history.append(S.copy())  # Record the state of S after adding a vertex
             update(grafo, S)
             explored_nodes += 1
-
+            S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
             found, resultado_S = DA(grafo, S, k, S_history)
 
             if not found:
                 if debugSteps: print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
                 S.remove(w_i)
-                S_history.append(S.copy())  # Record the state of S after removing a vertex
                 update(grafo, S)
+                explored_nodes += 1
+                S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
             else:
                 return True, resultado_S  # Aliança encontrada
             i += 1
@@ -112,8 +113,14 @@ if __name__ == "__main__":
 
     if args.showAsJson:
         if found:
-            jsonResult = nx.node_link_data(G)
-            jsonResult["steps"] = [list(step) for step in steps]  # type: ignore
+            jsonResult = dict(nx.node_link_data(G))  # Convert to a dictionary
+            jsonResult["defensiveAlliances"] = [{
+                "id": 0,
+                "nodes": list(resultAlliance) if resultAlliance is not None else []
+            }]
+            jsonResult["steps"] = [
+                {"id": int(index), "values": list(step.items())} for index, step in enumerate(steps)
+            ]
             print(json.dumps(jsonResult))  # Print the JSON result
         else:
             print("{}")

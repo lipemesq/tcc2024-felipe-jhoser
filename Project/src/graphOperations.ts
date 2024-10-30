@@ -32,17 +32,37 @@ export class Alliance {
 	}
 }
 
+export class NodeCw {
+	node: number;
+	cw: number;
+
+	constructor(node: number, cw: number) {
+		this.node = node;
+		this.cw = cw;
+	}
+}
+
+export class Step {
+	id: number;
+	node_cw: NodeCw[];
+
+	constructor(id: number, node_cw: NodeCw[]) {
+		this.id = id;
+		this.node_cw = node_cw;
+	}
+}
+
 export class Graph {
 	nodes: Node[];
 	links: Link[];
 	defensiveAlliances?: Alliance[];
-	steps?: number[][];
+	steps?: Step[];
 
 	constructor(
 		nodes: Node[],
 		links: Link[],
 		defensiveAlliances?: Alliance[],
-		steps?: number[][]
+		steps?: Step[]
 	) {
 		this.nodes = nodes;
 		this.links = links;
@@ -57,7 +77,7 @@ export class Graph {
 	 * @returns {Graph} A new Graph instance created from the JSON.
 	 */
 	static fromJson(json: any): Graph {
-		const nodes = json.nodes.map((node: any) => new Node(node.id));
+		const nodes = json.nodes.map((node: any) => new Node(Number(node.id)));
 		const links = json.links.map((link: any) => {
 			const sourceNode = nodes.find(
 				(node: any) => node.id === link.source
@@ -67,12 +87,26 @@ export class Graph {
 			);
 			return new Link(sourceNode, targetNode);
 		});
-		const steps = json.steps.map((s: any) => s.map((id: any) => id));
-		const defensiveAlliances =
-			json.defensiveAlliances?.map((alliance: any) => {
-				const allianceNodes = alliance.nodes;
-				return new Alliance(alliance.id, allianceNodes);
-			}) || [];
+
+		// Check if json.steps is an array
+		const steps: Step[] = Array.isArray(json.steps)
+			? json.steps.map((s: any) => {
+					const id: number = s.id;
+					const nodes_cw = Array.isArray(s.values)
+						? s.values.map((v: any) => {
+								return new NodeCw(Number(v[0]), Number(v[1]));
+						  })
+						: [];
+					return new Step(id, nodes_cw);
+			  })
+			: [];
+
+		const defensiveAlliances = Array.isArray(json.defensiveAlliances)
+			? json.defensiveAlliances.map((alliance: any) => {
+					const allianceNodes: number[] = alliance.nodes;
+					return new Alliance(alliance.id, allianceNodes);
+			  })
+			: [];
 
 		const graph = new Graph(nodes, links, defensiveAlliances, steps);
 		graph.prepareGraph();
@@ -181,14 +215,24 @@ export class Graph {
 		const node: Node | undefined = this.nodes.find(
 			(node) => node.id === nodeId
 		);
-		/*
-		console.log(
-			"Found node id:",
-			nodeId,
-			" and alliance: ",
-			node?.alliance
-		);*/
 		return node;
+	}
+
+	/**
+	 * Method to find the neighbors of a node by its ID.
+	 * @param {number} nodeId - The ID of the node to find its neighbors.
+	 * @returns {Node[]} An array of nodes that are neighbors of the specified node.
+	 */
+	findNeighborsById(nodeId: number): Node[] {
+		const node = this.findNodeById(nodeId);
+		if (!node) return [];
+		return this.nodes.filter((n) =>
+			this.links.some(
+				(link) =>
+					(link.source.id === node.id && link.target.id === n.id) ||
+					(link.target.id === node.id && link.source.id === n.id)
+			)
+		);
 	}
 }
 

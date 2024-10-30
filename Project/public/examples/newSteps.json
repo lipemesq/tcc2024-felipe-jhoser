@@ -1,0 +1,196 @@
+{
+    "directed": false,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "c_w": -1,
+            "id": 0
+        },
+        {
+            "c_w": 0,
+            "id": 2
+        },
+        {
+            "c_w": -1,
+            "id": 4
+        },
+        {
+            "c_w": -1,
+            "id": 5
+        },
+        {
+            "c_w": -1,
+            "id": 1
+        },
+        {
+            "id": 3
+        },
+        {
+            "id": 7
+        },
+        {
+            "id": 8
+        },
+        {
+            "id": 6
+        }
+    ],
+    "links": [
+        {
+            "source": 0,
+            "target": 2
+        },
+        {
+            "source": 0,
+            "target": 4
+        },
+        {
+            "source": 0,
+            "target": 5
+        },
+        {
+            "source": 0,
+            "target": 8
+        },
+        {
+            "source": 2,
+            "target": 3
+        },
+        {
+            "source": 2,
+            "target": 4
+        },
+        {
+            "source": 4,
+            "target": 1
+        },
+        {
+            "source": 4,
+            "target": 5
+        },
+        {
+            "source": 4,
+            "target": 7
+        },
+        {
+            "source": 5,
+            "target": 1
+        },
+        {
+            "source": 3,
+            "target": 6
+        },
+        {
+            "source": 3,
+            "target": 7
+        },
+        {
+            "source": 7,
+            "target": 8
+        },
+        {
+            "source": 7,
+            "target": 6
+        }
+    ],
+    "defensiveAlliances": [
+        {
+            "id": 0,
+            "nodes": [
+                1,
+                4,
+                0,
+                2,
+                5
+            ]
+        }
+    ],
+    "steps": [
+        {
+            "id": 0,
+            "values": [
+                [
+                    0,
+                    2
+                ]
+            ]
+        },
+        {
+            "id": 1,
+            "values": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    1
+                ]
+            ]
+        },
+        {
+            "id": 2,
+            "values": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    4,
+                    1
+                ]
+            ]
+        },
+        {
+            "id": 3,
+            "values": [
+                [
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    0
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    4,
+                    0
+                ]
+            ]
+        },
+        {
+            "id": 4,
+            "values": [
+                [
+                    1,
+                    -1
+                ],
+                [
+                    0,
+                    -1
+                ],
+                [
+                    2,
+                    0
+                ],
+                [
+                    5,
+                    -1
+                ],
+                [
+                    4,
+                    -1
+                ]
+            ]
+        }
+    ]
+}

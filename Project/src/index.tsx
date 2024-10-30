@@ -26,7 +26,7 @@ const App: React.FC = () => {
 	const [state, setState] = useState<Graph>(new Graph([], []));
 	const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
 	const [step, setStep] = useState<number>(0);
-	var maxSteps: number = -1;
+	const [maxSteps, setMaxSteps] = useState<number>(0);
 
 	const [allianceColors, setAllianceColors] = useState<string[]>([]);
 
@@ -64,6 +64,8 @@ const App: React.FC = () => {
 		const graph = Graph.fromJson(json);
 		setState((state) => state.updateGraph(graph));
 		setData(graph);
+		setMaxSteps((graph.steps ?? []).length);
+		setStep(0);
 	};
 
 	// TODO: Trocar esse negócio de adicionar nó por focusOnNode
@@ -95,16 +97,34 @@ const App: React.FC = () => {
 		(nodeObject: NodeObject) => {
 			const node: Node | undefined = state.findNodeById(nodeObject.id);
 
-			if (node && state.steps && state.steps[step].includes(node.id)) {
-				if (step == maxSteps) return "green";
-				else return "red";
+			if (
+				node &&
+				state.steps &&
+				state.steps[step].node_cw.find((ncw) => ncw.node == node.id)
+			) {
+				const nodeIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node == node.id
+				);
+				if (step == maxSteps - 1) return "green";
+				else {
+					if (nodeIn?.cw ?? 1 > 0) return "blue";
+					else return "lightGreen";
+				}
+			} else if (node && state.steps) {
+				const isNeighbor = state.steps[step].node_cw.some((ncw) => {
+					return state.links.some((link) => {
+						return (
+							(link.source.id === node.id &&
+								link.target.id === ncw.node) ||
+							(link.target.id === node.id &&
+								link.source.id === ncw.node)
+						);
+					});
+				});
+				if (isNeighbor) return "grey";
 			}
-			/*const nodeAlliance = node?.alliance;
-			if (nodeAlliance !== undefined) {
-				return allianceColors[nodeAlliance];
-			}
-			*/
-			return "grey";
+
+			return "lightGrey";
 		},
 		[allianceColors, step]
 	);
@@ -113,18 +133,17 @@ const App: React.FC = () => {
 		(linkObject: LinkObject): number => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
-			// if (
-			// 	sourceNode?.alliance == undefined &&
-			// 	targetNode?.alliance != undefined
-			// )
-			if (
-				sourceNode &&
-				state.steps &&
-				!state.steps[step].includes(sourceNode.id) &&
-				targetNode &&
-				state.steps[step].includes(targetNode.id)
-			)
-				return 0; //3;
+
+			if (sourceNode && state.steps && targetNode) {
+				const isSourceIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node == sourceNode.id
+				);
+				const isTargetIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node === targetNode.id
+				);
+				if (!isSourceIn && isTargetIn)
+					if (step == maxSteps - 1) return 5;
+			}
 
 			return 0;
 		},
@@ -135,20 +154,20 @@ const App: React.FC = () => {
 		(linkObject: LinkObject): number => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
-			// if (
-			// 	sourceNode?.alliance !== undefined &&
-			// 	sourceNode?.alliance === targetNode?.alliance
-			// )
-			// 	return 3;
 
-			if (
-				sourceNode &&
-				state.steps &&
-				state.steps[step].includes(sourceNode.id) &&
-				targetNode &&
-				state.steps[step].includes(targetNode.id)
-			) {
-				return 3;
+			if (sourceNode && state.steps && targetNode) {
+				const isSourceIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node == sourceNode.id
+				);
+				const isTargetIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node === targetNode.id
+				);
+				if (
+					(!isSourceIn && isTargetIn) ||
+					(isSourceIn && !isTargetIn) ||
+					(isSourceIn && isTargetIn)
+				)
+					return 3;
 			}
 
 			return 1;
@@ -160,21 +179,29 @@ const App: React.FC = () => {
 		(linkObject: LinkObject): string => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
-			// if (
-			// 	sourceNode?.alliance !== undefined &&
-			// 	sourceNode?.alliance === targetNode?.alliance
-			// )
-			if (
-				state.steps &&
-				state.steps[step].includes(sourceNode!.id) &&
-				state.steps[step].includes(targetNode!.id)
-			) {
-				if (step == maxSteps) return "green";
-				else return "red";
+			if (state.steps && sourceNode && targetNode) {
+				const isSourceIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node == sourceNode.id
+				);
+				const isTargetIn = state.steps[step].node_cw.find(
+					(ncw) => ncw.node === targetNode.id
+				);
+				if (isSourceIn && isTargetIn)
+					if (step == maxSteps - 1) return "green";
+					else return "blue";
+				else if (
+					(!isSourceIn && isTargetIn) ||
+					(isSourceIn && !isTargetIn)
+				) {
+					const nodeIn = isSourceIn || isTargetIn;
+					//if (nodeIn?.cw ?? 1 > 0) return "grey";
+					//else return "lightGreen";
+					return "grey";
+				}
 			}
 			// return allianceColors[targetNode?.alliance];
 
-			return "grey";
+			return "lightGrey";
 		},
 		[allianceColors, step]
 	);
@@ -190,10 +217,7 @@ const App: React.FC = () => {
 					if (step > 0) setStep(step - 1);
 				}}
 				handleRightArrowClick={function (): void {
-					if (step < (state.steps || []).length - 1) {
-						maxSteps = (state.steps || []).length - 1;
-						setStep(step + 1);
-					}
+					if (step < maxSteps - 1) setStep(step + 1);
 				}}
 			/>
 			<ForceGraph2D

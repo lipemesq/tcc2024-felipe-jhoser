@@ -38,7 +38,9 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 - Dia ==14/novembro==
 	1. [ ] Remodelar para algoritmo não recursivo (pilha ou fila).
 	2. [ ] Adicionar os grafos tradicionais como exemplos no projeto.
-- ... expandir a aliança nó-a-nó de forma animada?
+- Dia ==21/novembro==
+	1. [ ] Otimizar a representação de dados da web.
+	2. [ ] Arrumar a saída do algoritmo python pra bater exatamente com o que o web recebe.
 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana
