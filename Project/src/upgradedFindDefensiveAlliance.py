@@ -14,11 +14,12 @@ def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
     found = False
     resultado_S = None
     global explored_nodes
+    S = []
     S_history = []  # Modified to store c_w of each node at the current moment
 
     while not found and i < n:
         v_i = list(grafo.nodes)[i]
-        S = {v_i}
+        S.append(v_i)
         update(grafo, S)
         S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
         c_v_i = grafo.nodes[v_i]['c_w']
@@ -53,7 +54,7 @@ def DA(grafo, S, k, S_history):
         found = False
         while not found and i < min(t, len(W)):
             w_i = W[i]
-            S.add(w_i)
+            S.append(w_i)
             if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
             update(grafo, S)
             explored_nodes += 1
@@ -62,7 +63,7 @@ def DA(grafo, S, k, S_history):
 
             if not found:
                 if debugSteps: print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
-                S.remove(w_i)
+                S.pop(w_i)
                 update(grafo, S)
                 explored_nodes += 1
                 S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
@@ -78,10 +79,13 @@ def DA(grafo, S, k, S_history):
 
 def update(grafo, S):
     for v in S:
-        Nv = set(grafo.neighbors(v))
+        Nv = list(grafo.neighbors(v))
         n_vizinhos = grafo.degree[v]
         required_neighbors = math.ceil(n_vizinhos / 2)
-        Nv_in_S = Nv & S
+
+        # Encontrar a interseção entre Nv e S
+        Nv_in_S = [neighbor for neighbor in Nv if neighbor in S]
+        
         c_v = required_neighbors - len(Nv_in_S)
         grafo.nodes[v]['c_w'] = c_v
         if debugSteps: print(f'Atualizando vértice {v}, novo c_w = {c_v}, vizinhos em S: {len(Nv_in_S)}, requerido: {required_neighbors}')
