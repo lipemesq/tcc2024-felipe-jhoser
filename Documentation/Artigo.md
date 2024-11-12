@@ -68,42 +68,25 @@ Usar [[Conhecimentos]].
 #### Evitando repetir conjuntos
 	Explicar a pequena modificação que evita repetir conjuntos
 ## Metodologia
-	Apresentar o plano
-		O que quisemos fazer
-			Algoritmo em python
-			Modificações
-			Plataforma de visualizaçao em etapas
-	Detalhes de Implementação
-		Prints da visualização explicando o funcionamento?
-		Modificações
-
-O projeto é composto por duas partes principais: algoritmos de busca implementados em Python e um visualizador web para exibir os passos do algoritmo.
+O projeto é composto por duas partes principais: algoritmos de busca implementados em Python e um visualizador web criado para exibir os passos deste algoritmo. As partes funcionam de forma independente, sendo conectadas apenas pelo formato de entrada e saída dos programas.
 ### Algoritmo em Python
 A implementação do algoritmo proposto por [1] foi feita em Python e consta completa no Apêndice 1.
 
-	Separar as duas versões e comparar? 
+Nesta implementação foi utilizada a estrutura de dados da biblioteca _Networkx_ para manipulação dos grafos, e, no mais, estruturada de forma semelhante ao algoritmo teórico, com a exceção do uso de uma estrutura de pilha para substituir a chamada recursiva.
 
-Nesta implementação foi utilizada a estrutura de dados da biblioteca _Networkx_ para manipulação dos grafos.
+Além do resultado final, o programa possibilita o retorno da aliança em formato JSON, com as características utilizadas no visualizador web. Essas características permitem a visualização passo a passo dos nós expandidos pelo algoritmo, e consistem do conjunto $W$ a cada iteração da função `DefensiveAlliance`.
 
-Além do resultado final, possibilitamos o retorno da aliança em formato JSON, com as características utilizadas no visualizador web. Essas características permitem a visualização passo a passo dos nós expandidos pelo algoritmo.
-
-	Colocar como fazemos pra contar os passos (capturar S a toda iteração)
+	E o que mais?
 	Colocar as diferentes saídas do algoritmo como exemplo
 
 ### Visualizador web
-O projeto web foi desenvolvido com Typescript e React.
+O projeto web foi desenvolvido com Typescript e React, e sua proposta é fornecer uma visualização passo-a-passo do algoritmo e do grafo de entrada. Assim como o algoritmo de busca, o visualizador pode ser encontrado no repositório que se encontra nas referências.
 
-	Trazer as funcionalidades?
-		Ex: Importar arquivo, passar passo a passo, selecionar exemplos
+Para montar a visualização é necessário que seja fornecido como entrada um grafo disposto em formato JSON, contando com dois conjuntos extras de dados que são a aliança encontrada, caso exista, e um vetor de *steps*, que contém o conjunto $W$ no dado *passo* da iteração. 
 
-O grafo é convertido a partir do JSON para uma estrutura de classes, e então usada em diversos parâmetros para decidir a cor dos vértices e das arestas, que mudam de acordo com a sua relação com a aliança.
+Munido destas informações, o visualizador organiza os dados internamente para melhorar o desempenho e a decisão de cada caraterística visual do grafo e então personaliza uma *view* HTML, dada pela biblioteca [3], que cuida da renderização e simulação física do grafo.
 
-	Elencar cada parâmetro relativo a aliança na exibição?
-	Ex: 
-		- Arestas: mudam de cor de acordo com a seguinte condição
-			"Verde" se faz parte da aliança e a exibição está no último passo.
-			"Cinza" se for entre vértices fora da aliança e não estiverem em S.
-			"Vermelho" se estiver em S e antes do último passo.
+As especificações detalhadas a respeito do uso e características do visualizador estão na documentação do repositório.
 
 ## Resultado e discussão
 	Mostrar os resultados de desempenho
