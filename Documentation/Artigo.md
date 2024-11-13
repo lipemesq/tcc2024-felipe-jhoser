@@ -54,7 +54,7 @@ Algumas definições importantes
 - Uma aresta $e \in E$ é uma conexão entre dois vértices de $V$. Em um grafo não direcionado, a aresta $\{u, v\}$ conecta os vértices $u$ e $v$, sem direção. Em grafos direcionados, uma aresta $(u, v)$ conecta $u$ a $v$ com uma orientação de $u$ para $v$.
 
 ## Vizinhança de um Vértice (Neighborhood of a Vertex)
-- A vizinhança de um vértice $v \in V$, denotada por $N(v)$, é o conjunto de todos os vértices adjacentes a $v$, ou seja, $N(v) = \{ u \in V \mid \{u, v\} \in E \}$ em grafos não direcionados, e $N^+(v) = \{ u \in V \mid (v, u) \in E \}$ em grafos direcionados, onde $N^+(v)$ denota os sucessores de $v$.
+- A vizinhança de um vértice $v \in V$, denotada por $N(v)$, é o conjunto de todos os vértices adjacentes a $v$, ou seja, $N(v) = \{ u \in V \mid \{u, v\} \in E \}$ em grafos não direcionados.
 
 ## Grau de um Vértice (Degree of a Vertex)
 - O grau de um vértice $v \in V$ em um grafo não direcionado é dado por $\deg(v) = |N(v)|$, ou seja, o número de arestas incidentes a $v$. 
@@ -72,15 +72,15 @@ Algumas definições importantes
   Isso indica que os vertices $v$ na aliança devem possuir pelo menos tantos vertices dentro da aliança quanto fora dela.
 ## Conectividade
 
-- **Conectividade de um Grafo**: Em um grafo \( G = (V, E) \), a conectividade descreve a propriedade que determina se todos os pares de vértices estão ligados por caminhos. Existem dois principais tipos de conectividade:
-  - **Conectividade de Vértice (Vertex Connectivity)**: É o número mínimo de vértices que devem ser removidos para desconectar o grafo. Formalmente, a conectividade de vértices de um grafo \( G \), denotada por \( \kappa(G) \), é o menor número de vértices que, ao serem removidos, dividem o grafo em componentes desconectados.
-  - **Conectividade de Aresta (Edge Connectivity)**: É o número mínimo de arestas que precisam ser removidas para desconectar o grafo. Denotamos a conectividade de arestas de \( G \) como \( \lambda(G) \), sendo o menor número de arestas que, ao serem removidas, deixam o grafo desconectado.
+- **Conectividade de um Grafo**: Em um grafo $G = (V, E)$, a conectividade descreve a propriedade que determina se todos os pares de vértices estão ligados por caminhos. Existem dois principais tipos de conectividade:
+  - **Conectividade de Vértice (Vertex Connectivity)**: É o número mínimo de vértices que devem ser removidos para desconectar o grafo. Formalmente, a conectividade de vértices de um grafo $G$, denotada por $\kappa(G)$, é o menor número de vértices que, ao serem removidos, dividem o grafo em componentes desconectados.
+  - **Conectividade de Aresta (Edge Connectivity)**: É o número mínimo de arestas que precisam ser removidas para desconectar o grafo. Denotamos a conectividade de arestas de $G$ como $\lambda(G)$, sendo o menor número de arestas que, ao serem removidas, deixam o grafo desconectado.
 
 - **Componentes Conexas**: Em um grafo não direcionado, um **componente conexo** é um subgrafo no qual qualquer par de vértices está conectado por um caminho. Se um grafo inteiro for conexo, ele contém apenas um componente conexo.
 
 ## Algoritmos de Busca
 
-- **Algoritmo de Busca em Largura (Breadth-First Search - BFS)**: É um algoritmo de busca em grafos que explora os vértices em camadas, ou seja, explora todos os vizinhos de um vértice antes de avançar para os vizinhos dos vizinhos. Em um grafo \( G = (V, E) \), BFS começa em um vértice inicial \( s \in V \) e visita todos os vértices que estão a uma distância de \( d = 1 \) de \( s \), depois \( d = 2 \), e assim por diante. Este algoritmo é útil para encontrar o caminho mais curto em grafos não ponderados.
+- **Algoritmo de Busca em Largura (Breadth-First Search - BFS)**: É um algoritmo de busca em grafos que explora os vértices em camadas, ou seja, explora todos os vizinhos de um vértice antes de avançar para os vizinhos dos vizinhos. Em um grafo $G = (V, E)$, BFS começa em um vértice inicial $s \in V$ e visita todos os vértices que estão a uma distância de $d = 1$ de $s$, depois $d = 2$, e assim por diante. Este algoritmo é útil para encontrar o caminho mais curto em grafos não ponderados.
 
 - **Algoritmo de Busca em Profundidade (Depth-First Search - DFS)**: Um algoritmo de busca que explora o grafo o mais profundamente possível ao longo de cada ramo antes de retroceder. Em um grafo  $G = (V, E)$, a DFS começa em um vértice inicial $s \in V$ e explora cada caminho a partir de $s$ até chegar a um vértice sem vizinhos inexplorados, momento em que retrocede e explora novos caminhos. A DFS é útil para detectar ciclos, encontrar componentes fortemente conexas e ordens topológicas.
 
