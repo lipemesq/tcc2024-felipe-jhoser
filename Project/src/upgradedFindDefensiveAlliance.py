@@ -63,7 +63,7 @@ def DA(grafo, S, k, S_history):
 
             if not found:
                 if debugSteps: print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
-                S.pop(w_i)
+                S.pop()
                 update(grafo, S)
                 explored_nodes += 1
                 S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
@@ -112,7 +112,8 @@ if __name__ == "__main__":
     debugSteps = args.debugSteps
     allowSmallerAlliances = args.allowSmallerAlliances
     
-    G = nx.read_edgelist(args.input_file)
+    #G = nx.read_edgelist(args.input_file)
+    G = nx.erdos_renyi_graph(15, 0.35)
     found, resultAlliance, steps = main(G, args.k)
 
     if args.showAsJson:
