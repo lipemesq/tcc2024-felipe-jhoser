@@ -41,7 +41,7 @@
       {
         "id": "45a286cf5623b5d1",
         "type": "tabs",
-        "dimension": 55.14131088394468,
+        "dimension": 55.141310883944676,
         "children": [
           {
             "id": "032d01ce9023a481",
@@ -49,12 +49,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Artigo.md",
+                "file": "Planejamento.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Artigo"
+              "title": "Planejamento"
             }
           }
         ]
@@ -113,8 +113,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 222.5
   },
   "right": {
     "id": "61ac5b5a0e05b243",
@@ -159,11 +158,11 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "032d01ce9023a481",
+  "active": "1868fc46e6888378",
   "lastOpenFiles": [
-    "Conhecimentos.md",
+    "Planejamento.md",
     "Artigo.md",
-    "Referências.md",
-    "Planejamento.md"
+    "Conhecimentos.md",
+    "Referências.md"
   ]
 }

@@ -4,6 +4,8 @@ import example from "../public/examples/2.json";
 
 export class Node {
 	id: number;
+	neighbors: Node[] = [];
+	links: Link[] = [];
 	alliance?: number;
 
 	constructor(id: number, alliance?: number) {
@@ -55,17 +57,23 @@ export class Step {
 export class Graph {
 	nodes: Node[];
 	links: Link[];
+	stepsCount: Map<number, number> = new Map();
+	heatMap: Map<number, number> = new Map();
 	defensiveAlliances?: Alliance[];
 	steps?: Step[];
 
 	constructor(
 		nodes: Node[],
 		links: Link[],
+		stepsCount: Map<number, number> = new Map(),
+		heatMap: Map<number, number>,
 		defensiveAlliances?: Alliance[],
 		steps?: Step[]
 	) {
 		this.nodes = nodes;
 		this.links = links;
+		this.stepsCount = stepsCount;
+		this.heatMap = heatMap;
 		this.defensiveAlliances = defensiveAlliances;
 		this.steps = steps;
 	}
@@ -108,7 +116,14 @@ export class Graph {
 			  })
 			: [];
 
-		const graph = new Graph(nodes, links, defensiveAlliances, steps);
+		const graph = new Graph(
+			nodes,
+			links,
+			new Map(),
+			new Map(),
+			defensiveAlliances,
+			steps
+		);
 		graph.prepareGraph();
 		return graph;
 	}
@@ -144,6 +159,44 @@ export class Graph {
 				array[index].target = helper;
 			}
 		});
+
+		// Adiciona a lista de vizinhos a cada nó
+		this.nodes.forEach((node) => {
+			node.neighbors = this.links
+				.filter(
+					(link) =>
+						link.source.id === node.id || link.target.id === node.id
+				)
+				.map((link) =>
+					link.source.id === node.id ? link.target : link.source
+				);
+		});
+
+		this.nodes.forEach((node) => {
+			node.links = this.links.filter(
+				(link) =>
+					link.source.id === node.id || link.target.id === node.id
+			);
+		});
+
+		this.steps?.forEach((step) => {
+			const node = step.node_cw[step.node_cw.length - 1];
+			if (this.stepsCount.has(node.node)) {
+				this.stepsCount.set(
+					node.node,
+					this.stepsCount.get(node.node)! + 1
+				);
+			} else {
+				this.stepsCount.set(node.node, 1);
+			}
+		});
+
+		let maxStepsCount = Math.max(...Array.from(this.stepsCount.values()));
+
+		this.stepsCount.forEach((count, nodeId) => {
+			const relativeCount = count / maxStepsCount;
+			this.heatMap.set(nodeId, relativeCount);
+		});
 	}
 
 	/**
@@ -156,6 +209,8 @@ export class Graph {
 		return new Graph(
 			graph.nodes,
 			graph.links,
+			graph.stepsCount,
+			graph.heatMap,
 			graph.defensiveAlliances || [],
 			graph.steps
 		);

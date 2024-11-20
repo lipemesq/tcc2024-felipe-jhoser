@@ -3,6 +3,7 @@ import networkx as nx
 import math
 import json
 from typing import Tuple, Optional, Set, List, Dict
+import matplotlib.pyplot as plt
 
 debugSteps = False
 explored_nodes = 0
@@ -36,7 +37,7 @@ def DA(grafo, S, k, S_history):
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
     c_w = grafo.nodes[w]['c_w']
 
-    if c_w <= 0 and (len(S) == k or allowSmallerAlliances): # TODO: Manter o limitador?
+    if c_w <= 0 and (len(S) == k or (allowSmallerAlliances and len(S) < k)): # TODO: Manter o limitador?
         # Todos os vértices em S estão defendidos
         if debugSteps: print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
@@ -100,11 +101,13 @@ def is_defensive_alliance(G, S):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Find the first defensive alliance with size of at most k in a graph.')
-    parser.add_argument('input_file', type=str, help='Path to the input file')
+    parser.add_argument('--graphFromFile', type=str, help='Path to the input file')
+    parser.add_argument('--v', type=int,  default=50, help='Numero de vertices ao gerar grafo aleatorio')
+    parser.add_argument('--e', type=float,  default=5/100, help='Numero de arestas ao gerar grafo aleatorio')
     parser.add_argument('--k', type=int, default=5, help='Largest size of the defensive alliance to find')
-    parser.add_argument('--showAsJson', action='store_true', help='Show the result in JSON format')
     parser.add_argument('--debugSteps', action='store_true', help='Print steps along the way')
     parser.add_argument('--allowSmallerAlliances', action='store_true', help='Allow the algorithm to stops when finds a defensive alliance with size < k')
+    parser.add_argument('--writeGraphToJson', type=str, help='Name of the file to write the graph to')
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -112,32 +115,39 @@ if __name__ == "__main__":
     debugSteps = args.debugSteps
     allowSmallerAlliances = args.allowSmallerAlliances
     
-    #G = nx.read_edgelist(args.input_file)
-    G = nx.erdos_renyi_graph(15, 0.35)
+    if args.graphFromFile:
+        G = nx.read_edgelist(args.input_file)
+    else:
+        G = nx.erdos_renyi_graph(args.v, args.e)
+        
+    # nx.draw(G, with_labels=1)
+    # plt.show()
     found, resultAlliance, steps = main(G, args.k)
 
-    if args.showAsJson:
-        if found:
-            jsonResult = dict(nx.node_link_data(G))  # Convert to a dictionary
-            jsonResult["defensiveAlliances"] = [{
-                "id": 0,
-                "nodes": list(resultAlliance) if resultAlliance is not None else []
-            }]
-            jsonResult["steps"] = [
-                {"id": int(index), "values": list(step.items())} for index, step in enumerate(steps)
-            ]
-            print(json.dumps(jsonResult))  # Print the JSON result
-        else:
-            print("{}")
-    else:
-        if found and resultAlliance is not None:
-            print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
-            print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
-            print(f'Número de nós explorados: {explored_nodes}')
-            print(f'Histórico de S ({len(steps)} passos): {steps}')  # Print the history of S
+    jsonResult = dict(nx.node_link_data(G))
 
-        else:
-            print('Nenhuma aliança defensiva foi encontrada.')
+    if found:
+        print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
+        print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
+        print(f'Número de nós explorados e passos dados: {explored_nodes}')
+        #print(f'Histórico de S ({len(steps)} passos): {steps}')  # Print the history of S estava vindo muito grande
+        jsonResult["defensiveAlliances"] = [{
+            "id": 0,
+            "nodes": list(resultAlliance) if resultAlliance is not None else []
+        }]
+        jsonResult["steps"] = [
+            {"id": int(index), "values": list(step.items())} for index, step in enumerate(steps)
+        ]
+
+    else:
+        print('Nenhuma aliança defensiva foi encontrada.')
+        jsonResult["steps"] = [
+            {"id": 0, "values": []}
+        ]
+    
+    if args.writeGraphToJson:
+        with open(args.writeGraphToJson, 'w') as file:            
+            file.write(json.dumps(jsonResult))
 
 # testar inputs em https://csacademy.com/app/graph_editor/
 # inputs, testados com tamanho k=5: 

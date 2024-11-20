@@ -41,6 +41,8 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 - Dia ==21/novembro==
 	1. [ ] Otimizar a representação de dados da web.
 	2. [ ] Arrumar a saída do algoritmo python pra bater exatamente com o que o web recebe.
+	3. [ ] Mapa de calor dos nós já explorados?
+	4. [ ] Fazer flag pra achar a maior aliança até o tamanho x
 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana

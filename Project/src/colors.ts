@@ -66,3 +66,20 @@ export function randomColors(total: number): string[] {
 
 	return colors;
 }
+
+export function getColorFromTemp(a: number) {
+	// Map the temperature to a 0-1 range
+	// var a = (t + 30)/60;
+	// a = (a < 0) ? 0 : ((a > 1) ? 1 : a);
+
+	// Scrunch the green/cyan range in the middle
+	var sign = a < 0.5 ? -1 : 1;
+	a = (sign * Math.pow(2 * Math.abs(a - 0.5), 0.35)) / 2 + 0.5;
+
+	// Linear interpolation between the cold and hot
+	var h0 = 259;
+	var h1 = 12;
+	var h = h0 * (1 - a) + h1 * a;
+
+	return HSVtoRGB(h, 75, 90);
+}

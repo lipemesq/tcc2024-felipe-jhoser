@@ -3,8 +3,9 @@ import ReactDOM from "react-dom/client";
 import ForceGraph3D from "react-force-graph-3d";
 import ForceGraph2D from "react-force-graph-2d";
 import { Graph, Node, Link } from "./graphOperations";
-import { randomColors } from "./colors";
+import { randomColors, getColorFromTemp } from "./colors";
 import ButtonsView from "./buttonsView";
+import ColorBar from "./ColorBar"; // Import the ColorBar component
 
 // MARK: - JS ForceGraph3D Types
 
@@ -22,8 +23,12 @@ interface GraphData {
 	links: LinkObject[];
 }
 
+const NODE_R = 4;
+
 const App: React.FC = () => {
-	const [state, setState] = useState<Graph>(new Graph([], []));
+	const [state, setState] = useState<Graph>(
+		new Graph([], [], new Map(), new Map())
+	);
 	const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
 	const [step, setStep] = useState<number>(0);
 	const [maxSteps, setMaxSteps] = useState<number>(0);
@@ -34,6 +39,62 @@ const App: React.FC = () => {
 
 	const exampleFiles = ["1.json", "2.json", "3.json"];
 	// const inputFiles = ["4.in", "5.in"];
+
+	const [highlightNodes, setHighlightNodes] = useState<Set<any>>(new Set());
+	const [highlightLinks, setHighlightLinks] = useState<Set<any>>(new Set());
+	const [hoverNode, setHoverNode] = useState<any>(null);
+
+	const [is3DView, setIs3DView] = useState(false);
+	const [isHeatmap, setIsHeatmap] = useState(false);
+
+	const updateHighlight = () => {
+		setHighlightNodes(new Set(highlightNodes));
+		setHighlightLinks(new Set(highlightLinks));
+	};
+
+	const handleNodeHover = (node: any) => {
+		highlightNodes.clear();
+		highlightLinks.clear();
+
+		if (node) {
+			highlightNodes.add(node);
+			if (node.neighbors) {
+				node.neighbors.forEach((neighbor: any) =>
+					highlightNodes.add(neighbor)
+				);
+			}
+			if (node.links) {
+				node.links.forEach((link: any) => highlightLinks.add(link));
+			}
+		}
+
+		setHoverNode(node || null);
+		updateHighlight();
+	};
+
+	const handleLinkHover = (link: any) => {
+		highlightNodes.clear();
+		highlightLinks.clear();
+
+		if (link) {
+			highlightLinks.add(link);
+			highlightNodes.add(link.source);
+			highlightNodes.add(link.target);
+		}
+
+		updateHighlight();
+	};
+
+	const paintRing = useCallback(
+		(node: any, ctx: any) => {
+			// add ring just for highlighted nodes
+			ctx.beginPath();
+			ctx.arc(node.x, node.y, NODE_R * 1.4, 0, 2 * Math.PI, false);
+			ctx.fillStyle = node === hoverNode ? "red" : "orange";
+			ctx.fill();
+		},
+		[hoverNode]
+	);
 
 	useEffect(() => {
 		setAllianceColors(randomColors(state.defensiveAlliances?.length ?? 0));
@@ -70,10 +131,7 @@ const App: React.FC = () => {
 
 	// TODO: Trocar esse negócio de adicionar nó por focusOnNode
 
-	const handleNodeClick = useCallback((node: NodeObject) => {
-		//setState((state) => state.removeNode(node.id));
-		//setData({ nodes: state.nodes, links: state.links });
-	}, []);
+	const handleNodeClick = useCallback((node: NodeObject) => {}, []);
 
 	const handleBackgroundClick = useCallback(() => {
 		//setState((state) => state.addRandomNode());
@@ -96,6 +154,19 @@ const App: React.FC = () => {
 	const decideNodeColor = useCallback(
 		(nodeObject: NodeObject) => {
 			const node: Node | undefined = state.findNodeById(nodeObject.id);
+
+			if (isHeatmap && node) {
+				const heat = state.heatMap.get(node.id);
+				const color = getColorFromTemp(heat ?? 0);
+				const compressedHeat = (heat ?? 0) * 0.8 + 0.2;
+				return `rgba(${color.r}, ${color.g}, ${color.b}, ${compressedHeat})`;
+			}
+
+			if (is3DView) {
+				if (highlightNodes.has(node)) {
+					return "red";
+				}
+			}
 
 			if (
 				node &&
@@ -126,7 +197,7 @@ const App: React.FC = () => {
 
 			return "lightGrey";
 		},
-		[allianceColors, step]
+		[allianceColors, step, is3DView, highlightNodes, isHeatmap, state]
 	);
 
 	const decideLinkDirectionalArrowLength = useCallback(
@@ -179,6 +250,13 @@ const App: React.FC = () => {
 		(linkObject: LinkObject): string => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
+
+			if (is3DView) {
+				if (highlightLinks.has(linkObject)) {
+					return "orange";
+				}
+			}
+
 			if (state.steps && sourceNode && targetNode) {
 				const isSourceIn = state.steps[step].node_cw.find(
 					(ncw) => ncw.node == sourceNode.id
@@ -203,8 +281,12 @@ const App: React.FC = () => {
 
 			return "lightGrey";
 		},
-		[allianceColors, step]
+		[allianceColors, step, is3DView, highlightLinks]
 	);
+
+	const handleViewSwitch = () => {
+		setIs3DView(!is3DView);
+	};
 
 	return (
 		<div style={{ position: "relative" }}>
@@ -219,25 +301,79 @@ const App: React.FC = () => {
 				handleRightArrowClick={function (): void {
 					if (step < maxSteps - 1) setStep(step + 1);
 				}}
+				handleViewSwitch={handleViewSwitch}
+				is3DView={is3DView}
+				handleDoubleLeftArrowClick={function (): void {
+					setStep(0);
+				}}
+				handleDoubleRightArrowClick={function (): void {
+					setStep(maxSteps - 1);
+				}}
+				handleHeatmapSwitch={function (): void {
+					setIsHeatmap(!isHeatmap);
+				}}
+				isHeatmap={isHeatmap}
 			/>
-			<ForceGraph2D
-				linkLabel={(link) =>
-					`${(link.source as NodeObject).id} -> ${
-						(link.target as NodeObject).id
-					}`
-				}
-				nodeLabel={(node) => `Node ${node.id}`}
-				nodeColor={decideNodeColor}
-				enableNodeDrag={true}
-				//onNodeClick={handleNodeClick}
-				//onBackgroundClick={handleBackgroundClick}
-				linkCurvature={0.0}
-				linkWidth={decideLinkWidth}
-				linkColor={decideLinkColor}
-				linkDirectionalArrowLength={decideLinkDirectionalArrowLength}
-				linkDirectionalArrowRelPos={1}
-				graphData={data}
-			/>
+			{isHeatmap && <ColorBar stepCount={state.stepsCount} />}
+			{is3DView ? (
+				<ForceGraph3D
+					linkLabel={(link) =>
+						`${(link.source as NodeObject).id} -> ${
+							(link.target as NodeObject).id
+						}`
+					}
+					nodeLabel={(node) => `Node ${node.id}`}
+					nodeColor={decideNodeColor}
+					enableNodeDrag={false}
+					// onNodeClick={handleNodeClick}
+					linkDirectionalParticles={2}
+					linkDirectionalParticleWidth={(link) =>
+						highlightLinks.has(link) ? 4 : 0
+					}
+					onNodeHover={handleNodeHover}
+					onLinkHover={handleLinkHover}
+					//onBackgroundClick={handleBackgroundClick}
+					linkCurvature={0.0}
+					linkWidth={decideLinkWidth}
+					linkColor={decideLinkColor}
+					linkDirectionalArrowLength={
+						decideLinkDirectionalArrowLength
+					}
+					linkDirectionalArrowRelPos={1}
+					graphData={data}
+				/>
+			) : (
+				<ForceGraph2D
+					linkLabel={(link) =>
+						`${(link.source as NodeObject).id} -> ${
+							(link.target as NodeObject).id
+						}`
+					}
+					nodeLabel={(node) => `Node ${node.id}`}
+					nodeColor={decideNodeColor}
+					enableNodeDrag={true}
+					// onNodeClick={handleNodeClick}
+					linkDirectionalParticles={2}
+					linkDirectionalParticleWidth={(link) =>
+						highlightLinks.has(link) ? 4 : 0
+					}
+					nodeCanvasObjectMode={(node: any) =>
+						highlightNodes.has(node) ? "before" : undefined
+					}
+					nodeCanvasObject={paintRing}
+					onNodeHover={handleNodeHover}
+					onLinkHover={handleLinkHover}
+					//onBackgroundClick={handleBackgroundClick}
+					linkCurvature={0.0}
+					linkWidth={decideLinkWidth}
+					linkColor={decideLinkColor}
+					linkDirectionalArrowLength={
+						decideLinkDirectionalArrowLength
+					}
+					linkDirectionalArrowRelPos={1}
+					graphData={data}
+				/>
+			)}
 		</div>
 	);
 };

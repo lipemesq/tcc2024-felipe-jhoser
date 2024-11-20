@@ -5,8 +5,14 @@ interface ButtonsViewInterface {
 	handleFileSelected: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	fileSelectorLabel: string;
 	handleFileImported: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	handleLeftArrowClick: () => void; // New handler for left arrow
-	handleRightArrowClick: () => void; // New handler for right arrow
+	handleLeftArrowClick: () => void;
+	handleRightArrowClick: () => void;
+	handleDoubleLeftArrowClick: () => void;
+	handleDoubleRightArrowClick: () => void;
+	handleViewSwitch: () => void;
+	is3DView: boolean;
+	handleHeatmapSwitch: () => void;
+	isHeatmap: boolean;
 }
 
 const ButtonsView: React.FC<ButtonsViewInterface> = ({
@@ -16,6 +22,12 @@ const ButtonsView: React.FC<ButtonsViewInterface> = ({
 	handleFileImported,
 	handleLeftArrowClick,
 	handleRightArrowClick,
+	handleDoubleLeftArrowClick,
+	handleDoubleRightArrowClick,
+	handleViewSwitch,
+	is3DView,
+	handleHeatmapSwitch,
+	isHeatmap,
 }) => {
 	return (
 		<div
@@ -41,13 +53,6 @@ const ButtonsView: React.FC<ButtonsViewInterface> = ({
 						</option>
 					))}
 				</optgroup>
-				{/* <optgroup label="Calcular aliança">
-						{inputFiles.map((file) => (
-							<option key={file} value={file}>
-								{`Input ${file.replace(".in", "")}`}
-							</option>
-						))}
-					</optgroup> */}
 			</select>
 			<input
 				id="fileInput"
@@ -71,10 +76,20 @@ const ButtonsView: React.FC<ButtonsViewInterface> = ({
 				}}
 			>
 				<button
+					onClick={handleDoubleLeftArrowClick}
+					style={{
+						fontSize: "16px",
+						padding: "4px 8px",
+						marginRight: "16px",
+					}}
+				>
+					&#8678;
+				</button>
+				<button
 					onClick={handleLeftArrowClick}
 					style={{
-						fontSize: "16px", // Increase font size
-						padding: "8px 16px", // Increase padding for larger button
+						fontSize: "16px",
+						padding: "8px 16px",
 					}}
 				>
 					&#8592;
@@ -82,12 +97,52 @@ const ButtonsView: React.FC<ButtonsViewInterface> = ({
 				<button
 					onClick={handleRightArrowClick}
 					style={{
-						fontSize: "16px", // Increase font size
-						padding: "8px 16px", // Increase padding for larger button
+						fontSize: "16px",
+						padding: "8px 16px",
 						marginLeft: "16px",
 					}}
 				>
 					&#8594;
+				</button>
+				<button
+					onClick={handleDoubleRightArrowClick}
+					style={{
+						fontSize: "16px",
+						padding: "4px 8px",
+						marginLeft: "16px",
+					}}
+				>
+					&#8680;
+				</button>
+				<button
+					onClick={handleViewSwitch}
+					style={{
+						marginLeft: "16px",
+						padding: "8px 16px",
+						backgroundColor: is3DView ? "#4cd964" : "#ccc",
+						color: "white",
+						border: "none",
+						borderRadius: "20px",
+						cursor: "pointer",
+						transition: "background-color 0.3s",
+					}}
+				>
+					{is3DView ? "3D View" : "2D View"}
+				</button>
+				<button
+					onClick={handleHeatmapSwitch}
+					style={{
+						marginLeft: "16px",
+						padding: "8px 16px",
+						backgroundColor: isHeatmap ? "#4cd964" : "#ccc",
+						color: "white",
+						border: "none",
+						borderRadius: "20px",
+						cursor: "pointer",
+						transition: "background-color 0.3s",
+					}}
+				>
+					{isHeatmap ? "Hide Heatmap" : "Show Heatmap"}
 				</button>
 			</div>
 		</div>
