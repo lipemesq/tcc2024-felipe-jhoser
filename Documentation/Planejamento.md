@@ -34,15 +34,23 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 	3. [x] Criar a estrutura/esqueleto do texto.
 - Dia ==31/outubro==
 	1. [ ] Ter as definições e o desenvolvimento já legíveis.
-	2. [ ] Arrumar os bugs UI do projeto.
+	2. [x] Arrumar os bugs UI do projeto.
 - Dia ==14/novembro==
 	1. [ ] Remodelar para algoritmo não recursivo (pilha ou fila).
 	2. [ ] Adicionar os grafos tradicionais como exemplos no projeto.
 - Dia ==21/novembro==
 	1. [ ] Otimizar a representação de dados da web.
 	2. [ ] Arrumar a saída do algoritmo python pra bater exatamente com o que o web recebe.
-	3. [ ] Mapa de calor dos nós já explorados?
+	3. [x] Mapa de calor dos nós já explorados?
 	4. [ ] Fazer flag pra achar a maior aliança até o tamanho x
+- Dia ==28/novembro==
+- Dia ==05/dezembro==
+- Dia ==12/dezembro==
+- Dia ==15/dezembro== (domingo)
+	1. [ ] Tudo pronto
+		1. [ ] Apresentação máx 30min
+		2. [ ] Usar slides
+
 
 #### Tarefas extras
 Fazer quando tiver tempo depois de terminar os itens daquela semana
