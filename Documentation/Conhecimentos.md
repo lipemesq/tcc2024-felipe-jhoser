@@ -7,6 +7,10 @@
 	$c_w$
 	Número de vizinhos de $w$ que precisam ser adicionados a $S$ para que $w$ fique protegido.
 
+	A generalização de aliança defensiva, ofensiva e poderosa são as k-alianças,
+	onde k é a "diferença de poder" entre a aliança e a vizinhança externa. 
+
+	
 #### Algoritmo FPT de aliança defensiva
 
 Passa de vértice em vértice e tenta expandi-lo em uma aliança defensiva de tamanho $k$. Se der, devolve a aliança.
