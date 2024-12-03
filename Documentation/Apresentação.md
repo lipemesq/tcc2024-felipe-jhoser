@@ -1,0 +1,2 @@
+Problemas de decisão envolvendo alianças foram provados serem NP-completos, ou seja, super polinomiais em $n$.
+No histórico deste artigo temos a primeira abordagem FPT que tinha $O((2k-1)^k k^2n)$, que então passa por uma melhora exponencial para $O(k^kn)$. O legal dessa transição é que o problema deixa de ser exponencial em $n$ e ficando somente em $k$, viabilizando a resolução para domínios pequenos de $k$.

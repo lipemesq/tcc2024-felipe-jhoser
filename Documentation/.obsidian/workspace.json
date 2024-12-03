@@ -27,16 +27,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Referências.md",
+                "file": "Conhecimentos.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Referências"
+              "title": "Conhecimentos"
             }
           },
           {
-            "id": "1e58b2f34693b6ae",
+            "id": "320314414597d385",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Planejamento.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Planejamento"
+            }
+          },
+          {
+            "id": "faa9914ae3886824",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -49,7 +63,8 @@
               "title": "Artigo"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -150,14 +165,19 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "dfc4625279dd8eae",
+  "active": "faa9914ae3886824",
   "lastOpenFiles": [
-    "Referências.md",
+    "Conhecimentos.md",
+    "Apresentação.md",
+    "Planejamento.md",
     "Artigo.md",
+    "Referências.md",
+    "snippet.css.md",
+    "Untitled",
+    "Imagens/GraficoKelevK.png",
+    "Imagens",
     "2.md",
     "[].md",
-    "Conhecimentos.md",
-    "[.md",
-    "Planejamento.md"
+    "[.md"
   ]
 }

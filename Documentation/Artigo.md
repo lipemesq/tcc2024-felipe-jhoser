@@ -85,9 +85,24 @@ Antes de entrar na explicação minuciosa do algoritmo, é importante explicar o
 #### Complexidade
 FPT é uma classe de complexidade que trata de problemas *superpolinomiais* (como exponenciais) ao isolar e fixar um parâmetro exponencial específico do problema, chamado $k$, e então transformando a complexidade na função $f(k)*p(n)$. Nesta transformação, $f(k)$ é a complexidade de $k$ e pode ser *superpolinomial*, enquanto $p(n)$ é a função polinomial de $n$. Desta forma, fixando $k$ em valores menores abordar o algoritmo de forma mais tratável, custando muito menos tempo, dependendo do tamanho de $k$.
 
-O algoritmo usado neste estudo foi proposto por \[[[Artigo#^ref1 |1]]], e tem complexidade $O(k^kn)$, e é uma melhora de seu predecessor que tinha complexidade $O((2k − 1)^kk^2n)$.
+O algoritmo usado neste estudo foi proposto por \[[[Artigo#^ref1 |1]]], e tem complexidade $O(k^kn)$, e é uma melhora exponencial de seu predecessor, que tinha complexidade $O((2k − 1)^kk^2n)$. Esse é um avanço substancial, mas ainda é interessante demonstrar como problemas, mesmo parametrizados, crescem rapidamente:
 
-	Incluir uma pequena tabela de valores com alguns (3 ou 4) tempos de algoritmos, como o trivial, o antigo, o novo e mais algum, com diferentes tamanhos de k e n.
+| $k$ | $k^k$          |
+| --- | -------------- |
+| 2   | 4              |
+| 3   | 27             |
+| 4   | 256            |
+| 5   | 3.125          |
+| 6   | 46.656         |
+| 7   | 823.543        |
+| 9   | 387.420.489    |
+| 10  | 10.000.000.000 |
+
+| ![](GraficoKelevK.png)                   |
+| ---------------------------------------- |
+| <center>Gráfico da função $k^k$</center> |
+O propósito do algoritmo então é garantir que o tempo possa ser diminuído de acordo com $k$, sem que seja necessário executar para todo $n-k$ restante.
+
 #### Explicação
 O algoritmo é dividido em duas funções principais, a `main` e a `defensiveAlliance`. A `main` recebe como entrada um Grafo $G$ e um inteiro positivo $k$. De forma intuitiva, a proposta do algoritmo é realizar buscas em profundidade $k$ até encontrar uma aliança defensiva de tamanho $k$ ou todos os vértices terem servido de raiz da busca.
 
@@ -139,11 +154,8 @@ No início de `defensiveAlliance` o algoritmo escolhe o vértice de maior `c_w` 
 
 A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos necessários serem adicionados, ou seja, para que `w` seja defendido dentro da restrição do tamanho máximo `k`. Essa verificação funciona de modo semelhante a uma heurística de busca, poupando tempo ao evitar vértices que não podem ser defendidos posteriormente.
 
-A próxima parte é o que se pode ser chamado de núcleo do algoritmo: de acordo com o Lema 14 estabelecido por \[[[Artigo#^ref1 |1]]], é garantido que, se `S` pode ser expandido até se tornar uma aliança defensiva, então há um vértice no conjunto `W` que leva a esta solução. Assim, novamente o algoritmo poupa a exploração de vértices desnecessários. 
+A próxima parte é o que se pode ser chamado de núcleo do algoritmo: de acordo com o Lema 14 estabelecido por \[[[Artigo#^ref1 |1]]], é garantido que, se `S` pode ser expandido até se tornar uma aliança defensiva, então é possível encontrar um vértice que faz parte dessa solução olhando apenas $(d_w/2)+1$ vizinhos de `w` fora de `S`, poupando cerca de metade das verificações totais a serem feitas. 
 
-	Explicar brevemente o Lema 14
-
-	Fazer uma estimação da complexidade em termos do numero de arestas COM e SEM o lance do T
 #### Evitando repetir conjuntos
 	Explicar a pequena modificação que evita repetir conjuntos
 ## Metodologia
@@ -168,22 +180,11 @@ Munido destas informações, o visualizador organiza os dados internamente para 
 
 As especificações detalhadas a respeito do uso e características do visualizador estão na documentação do repositório.
 
-## Resultado e discussão
-	Mostrar os resultados de desempenho
-	Mostrar a diferença das pequenas modificações
-O algoritmo foi avaliado com base em dois critérios, o número de nós expandidos e o número de passos (inclusões e remoções de $S$) executados.
-Realizamos experimentos com as seguintes instâncias de grafos:
-
-| Grafo           | Nós expandidos | Passos executados |
-| --------------- | -------------- | ----------------- |
-| $K_{3,3}$       |                |                   |
-| $K_{5,5}$       |                |                   |
-| Grafo bipartido |                |                   |
-|                 |                |                   |
-|                 |                |                   |
+	Adicionar imagens explicando as características interessantes.
 
 ## Conclusão
-	Discussão futura
+	...
+Dentre os diversos temas que podem ser abordados em discussões futuras, destacamos a implementação e análise do algoritmo proposto por \[[[Artigo#^ref1 |1]]] para encontrar Conjuntos Seguros (*Secure Sets*), que segue uma abordagem FPT semelhante ao de alianças defensivas, e pode ser adaptado para o visualizador web para gerar resultados interessantes.
 
 ## Referências
 \[1] [Alliances In Graphs: Parameterized Algorithms And On Partitioning Series-parallel Graphs](https://stars.library.ucf.edu/cgi/viewcontent.cgi?article=4995&context=etd) 

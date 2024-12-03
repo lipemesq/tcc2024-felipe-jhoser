@@ -33,18 +33,21 @@ Reunião com o Guedes semana-sim-semana-não. Nas semanas-não, vamos mandar um 
 		7. [ ] Definir 0 < x < k < n por stdin.
 	3. [x] Criar a estrutura/esqueleto do texto.
 - Dia ==31/outubro==
-	1. [ ] Ter as definições e o desenvolvimento já legíveis.
+	1. [x] Ter as definições e o desenvolvimento já legíveis.
 	2. [x] Arrumar os bugs UI do projeto.
 - Dia ==14/novembro==
-	1. [ ] Remodelar para algoritmo não recursivo (pilha ou fila).
+	1. [x] Remodelar para algoritmo não recursivo (pilha ou fila).
 	2. [ ] Adicionar os grafos tradicionais como exemplos no projeto.
 - Dia ==21/novembro==
 	1. [ ] Otimizar a representação de dados da web.
-	2. [ ] Arrumar a saída do algoritmo python pra bater exatamente com o que o web recebe.
+	2. [x] Arrumar a saída do algoritmo python pra bater exatamente com o que o web recebe.
 	3. [x] Mapa de calor dos nós já explorados?
 	4. [ ] Fazer flag pra achar a maior aliança até o tamanho x
 - Dia ==28/novembro==
 - Dia ==05/dezembro==
+	1. [ ] Colocar a restrições de não calcular o histórico se não for preciso
+	2. [ ] Fazer as medições de nós explorados
+	3. [ ] Deixar o texto pronto
 - Dia ==12/dezembro==
 - Dia ==15/dezembro== (domingo)
 	1. [ ] Tudo pronto
