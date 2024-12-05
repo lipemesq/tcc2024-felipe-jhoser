@@ -29,6 +29,8 @@ def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
         if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
         explored_nodes += 1
         found, resultado_S = DA(grafo, S, k, S_history)
+        if not found:
+            S.pop()
         i += 1
     return found, resultado_S, S_history
 

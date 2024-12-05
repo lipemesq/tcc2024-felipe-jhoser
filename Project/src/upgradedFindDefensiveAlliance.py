@@ -140,7 +140,7 @@ if __name__ == "__main__":
     if args.graphFromFile:
         G = nx.read_edgelist(args.input_file)
     else:
-        G = nx.gnm_random_graph(args.v, args.e, args.seed) #.erdos_renyi_graph(args.v, args.e, args.seed)
+        G = nx.erdos_renyi_graph(args.v, args.e, args.seed)
         
     found, resultAlliance, steps = main(G, args.k)
 

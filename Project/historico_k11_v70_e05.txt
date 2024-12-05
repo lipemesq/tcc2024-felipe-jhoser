@@ -1,0 +1,57 @@
+SEM UPGRADES
+
+--k 11 --v 70 --e 0.09 --seed 11 
+Número de nós explorados e passos dados: 51497396     
+Nenhuma aliança defensiva foi 
+encontrada. 
+10 maiores valores de combinations > 1: ['0-10-16-18-23-24-25-43-44-48-51-61=1036', 
+'0-11-16-20-23-24-25-43-44-48-51-68=913', 
+'0-10-16-22-23-24-25-44-48-51-61=904', '0-11-16-20-23-24-35-43-44-48-51-68=867', '0-11-16-2-20-24-27-4-50-51-62-68=859', '0-10-16-18-22-23-24-25-44-48-51-56=830', '0-10-16-22-23-24-25-28-35-44-48-51=820', '0-10-16-22-23-24-25-28-44-48-51-68=802', '0-11-16-2-20-24-27-4-50-51-61-62=794', '0-10-16-22-23-24-25-44-48-51-56=788']     
+Combinations ocupa 58.67 MB em memoria    
+Número de entradas em combinations: 
+2418025     
+Graph 
+density: 0.08902691511387163  
+histogram   
+grau 0 = 0  
+grau 1 = 1  
+grau 2 = 2  
+grau 3 = 6  
+grau 4 = 6  
+grau 5 = 14 
+grau 6 = 15 
+grau 7 = 8  
+grau 8 = 5  
+grau 9 = 5  
+grau 10 = 6 
+grau 11 = 2 
+      
+real 14m50.802s
+user 0m0.000s
+sys  0m0.123s
+
+------------------------------------------------------------------------
+
+COM UPGRADES
+
+$ time python src/upgradedFindDefensiveAlliance.py --k 11 --v 70 --e 0.09 --seed 11 
+
+Número de nós explorados e passos dados: 2493078
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1: []
+Combinations ocupa 29.33 MB em memoria
+Nós pulados: 353641
+Graph density: 0.08902691511387163
+histogram
+grau 0 = 0
+grau 5 = 14
+grau 6 = 15
+grau 7 = 8
+grau 8 = 5
+grau 9 = 5
+grau 10 = 6
+grau 11 = 2
+
+real    0m47.800s
+user    0m0.000s
+sys     0m0.123s

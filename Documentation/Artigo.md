@@ -157,7 +157,55 @@ A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos nece
 A próxima parte é o que se pode ser chamado de núcleo do algoritmo: de acordo com o Lema 14 estabelecido por \[[[Artigo#^ref1 |1]]], é garantido que, se `S` pode ser expandido até se tornar uma aliança defensiva, então é possível encontrar um vértice que faz parte dessa solução olhando apenas $(d_w/2)+1$ vizinhos de `w` fora de `S`, poupando cerca de metade das verificações totais a serem feitas. 
 
 #### Evitando repetir conjuntos
-	Explicar a pequena modificação que evita repetir conjuntos
+Observando o comportamento do algoritmo no visualizador web foi possível notar que um comportamento pouco eficiente: o critério de expansão de $S$ (destacado a seguir) abre margem pra repetir várias vezes a mesma combinação de vértices, levando, principalmente em grafos de grande quantidade de vértices, a muito esforço improdutivo. 
+
+```
+DefensiveAlliance(G, S, k)
+	inicia v <- vértice de maior c_w em S.
+```
+
+Pensando nisso a equipe elaborou uma solução que armazena todas as combinações já analisadas anteriormente e impede de que novas iterações com elas sejam geradas, cortando toda a sub-árvore subsequente. Isso é feito com a criação de um dicionário e a marcação única de cada combinação:
+
+```
+inicia combinacoes <- dicionário vazio
+```
+
+```
+DefensiveAlliance(G, S, k)
+[...]
+	Para cada vértice w em W:
+		S <- S + w.
+
+		comb_id <- identificadores de S de forma ordenada.
+		Se existe combinacoes[comb_id]:
+			Retira w de S.
+			pula para o próximo vértice.
+		Caso contrário:	
+			cria combinacoes[comb_id].
+
+		Update(G, S).
+		aliança_encontrada <- DefensiveAlliance(G, S, k)
+[...]
+```
+
+Caso não exista uma entrada da combinação no dicionário, cria-se uma e a instância corrente de `S` é analisada. Caso contrário, a instância é ignorada, junto com todas as sub-árvores. A complexidade de tempo é se resume a ordenação de, no máximo, $k-1$ elementos, e ao acesso e escrita no dicionário. Ambos são ofuscados pela complexidade geral.
+
+Por outro lado, há um custo sério em termos de espaço. No pior, de não haver aliança e o algoritmo analisar todos os vértices, cada um custando $k^k$, e quando $k=n$, a combinação ocupa espaço $O(2^n)$, que corresponde a guardar todas as combinações de $n$ vértices, variando de tamanho $1$ até $n$. Isso pode ser mitigado ao limitar o tamanho das combinações armazenadas para a região crítica que vai ser repetida mais vezes. A análise desta região está na seção sobre Resultados e discussão.
+
+Quanto ao desempenho, esta técnica permite ao algoritmo poupar muito tempo ao "amortizar" o custo $k^k$ ao longo de várias iterações, pois, como nenhuma combinação é repetida, quanto mais exploradas são as combinações dos vértices, menos combinações existem para serem analisadas.
+
+#### Fazendo escolhas ponderadas
+Outro campo de melhoria no algoritmo que foi notado no visualizador é o da escolha do próximo vértice a ser analisado.
+
+```
+DefensiveAlliance(G, S, k)
+	inicia v <- vértice de maior c_w em S.
+```
+
+Esta escolha, feita as cegas, pode ser melhorada para acelerar o processo de convergência para a aliança, uma vez que ela exista e o nó raiz do algoritmo faça parte dela.
+
+	Explicar como funciona.
+
 ## Metodologia
 O projeto é composto por duas partes principais: algoritmos de busca implementados em Python e um visualizador web criado para exibir os passos deste algoritmo. As partes funcionam de forma independente, sendo conectadas apenas pelo formato de entrada e saída dos programas.
 
