@@ -1,0 +1,111 @@
+------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 10 --v 50 --e 0.1
+Aliança defensiva de tamanho 10 encontrada: [0, 28, 32, 10, 29, 38, 11, 43, 47, 45]
+Conjunto S é aliança: True
+Número de nós explorados e passos dados: 2698
+10 maiores valores de combinations > 1: ['0-10-15-21-28-3-32-43-8=8', '0-10-17-28-3-32-37-43-45-8=8', '0-10-15-17-21-28-32-43-8=8', '0-10-12-15-28-3-32-43-8=6', '0-10-12-15-24-28-3-32-43-8=6', '0-10-15-21-28-3-32-35-8=6', '0-10-15-21-28-3-32-37-8=6', '0-10-15-17-24-28-29-3-32-8=6', '0-10-15-24-28-3-32-43-8=6', 
+'0-10-17-28-3-32-43-8=6']
+Combinations ocupa 0.01 MB em memoria
+Número de entradas em combinations: 637
+Graph density: 0.08734693877551021
+histogram
+grau 0 = 0
+grau 1 = 0
+grau 2 = 13
+grau 3 = 8
+grau 4 = 8
+grau 5 = 7
+grau 6 = 9
+grau 7 = 4
+grau 8 = 0
+...
+grau 14 = 0
+grau 15 = 1
+
+------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 10 --v 50 --e 0.15
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1: ['0-16-27-28-33-39-42-44-6-9=216', '0-1-12-21-27-35-42-46-9=148', '0-1-12-21-27-28-35-42-46-9=148', '0-1-12-21-27-35-36-42-46-9=148', '0-1-12-21-27-42-46-6-9=148', '0-1-12-21-27-28-42-46-6-9=148', '0-1-12-21-27-36-42-46-6-9=148', '0-1-21-27-30-35-42-46-9=130', '0-1-21-27-28-30-35-42-46-9=130', '0-1-21-27-30-35-36-42-46-9=130']
+Combinations ocupa 1.83 MB em memoria
+Número de entradas em combinations: 50291
+Graph density: 0.14122448979591837
+histogram
+grau 0 = 0
+...
+grau 3 = 3
+grau 4 = 5
+grau 5 = 6
+grau 6 = 11
+grau 7 = 10
+grau 8 = 4
+grau 9 = 5
+grau 10 = 1
+grau 11 = 3
+grau 12 = 1
+...
+
+------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 10 --v 50 --e 0.2
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1: ['0-16-23-25-27-28-33-39-9=230', '0-14-18-25-28-3-36-39-9=148', '0-16-23-27-28-3-33-39-9=142', '0-16-23-27-28-3-39-9=98', '0-16-18-23-25-27-28-39-9=88', '0-16-23-25-27-28-39-9=82', '0-11-13-15-17-19-20-35=81', '0-11-13-15-17-19-20-27-35=81', '0-11-13-15-17-19-20-28-35=81', '0-11-13-15-17-19-20-35-36=81']
+Combinations ocupa 1.83 MB em memoria
+Número de entradas em combinations: 52843
+Graph density: 0.1853061224489796
+histogram
+grau 0 = 0
+...
+grau 7 = 10
+grau 8 = 10
+grau 9 = 6
+grau 10 = 5
+grau 11 = 4
+grau 12 = 4
+grau 13 = 2
+...
+
+------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 10 --v 50 --e 0.3
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1: ['0-12-18-19-3-34-37=32', '0-19-3-34-37-41-5=31', '0-18-19-27-3-34-37=28', '0-18-19-27-3-34-41=28', '0-12-19-3-34-37-41=25', '0-18-19-27-3-34-42=24', '0-14-18-27-29-3-36=24', '0-14-28-29-3-32-36=22', '0-10-12-30-32-34-35=22', '0-18-19-3-32-34-41=20']
+Combinations ocupa 0.20 MB em memoria
+Número de entradas em combinations: 6086
+Graph density: 0.2742857142857143
+histogram
+grau 0 = 0
+...
+grau 10 = 4
+grau 11 = 7
+grau 12 = 6
+grau 13 = 7
+grau 14 = 9
+grau 15 = 5
+grau 16 = 4
+grau 17 = 1
+...
+
+--------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 10 --v 50 --e 0.4
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1: ['0-18-27-3=6', '0-18-27-3-5=6', '0-18-27-3-9=6', '0-11-18-27-3=6', '0-13-18-27-3=6', '0-18-19-27-3=6', '0-18-20-27-3=6', '0-18-26-27-3=6', '0-18-27-28-3=6', '0-18-27-3-32=6']
+Combinations ocupa 0.00 MB em memoria
+Número de entradas em combinations: 113
+Graph density: 0.37387755102040815
+histogram
+grau 0 = 0
+...
+grau 15 = 8
+grau 16 = 4
+grau 17 = 3
+grau 18 = 6
+grau 19 = 6
+grau 20 = 11
+grau 21 = 1
+...
+
+-------------------------------------------------
+

@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Artigo.md",
+                "file": "Planejamento.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Artigo"
+              "title": "Planejamento"
             }
           }
         ],
@@ -168,10 +168,10 @@
   "active": "faa9914ae3886824",
   "lastOpenFiles": [
     "Conhecimentos.md",
+    "Referências.md",
+    "Artigo.md",
     "Apresentação.md",
     "Planejamento.md",
-    "Artigo.md",
-    "Referências.md",
     "snippet.css.md",
     "Untitled",
     "Imagens/GraficoKelevK.png",

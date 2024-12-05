@@ -1,0 +1,165 @@
+$ python src/upgradedFindDefensiveAlliance.py --k 23 --v 500 --e 0.11
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1, separados por número de -: ['0-28=1', '0-36=1', '0-62=1', '0-69=1', '0-74=1', '0-90=1', '0-100=1', '0-115=1', '0-117=1', '0-121=1']
+Combinations ocupa 0.00 MB em memoria
+Número de entradas em combinations: 21
+Graph density: 0.10868937875751503
+histogram
+grau 0 = 0
+...
+grau 39 = 2
+grau 40 = 8
+grau 41 = 2
+grau 42 = 5
+grau 43 = 9
+grau 44 = 9
+grau 45 = 8
+grau 46 = 15
+grau 47 = 24
+...
+grau 53 = 30
+grau 54 = 42
+grau 55 = 21
+grau 56 = 20
+grau 57 = 31
+grau 58 = 23
+grau 59 = 21
+grau 60 = 14
+grau 61 = 17
+grau 62 = 13
+grau 63 = 12
+grau 64 = 10
+grau 54 = 42
+grau 55 = 21
+grau 56 = 20
+grau 57 = 31
+grau 58 = 23
+grau 59 = 21
+grau 60 = 14
+grau 61 = 17
+grau 62 = 13
+grau 63 = 12
+grau 64 = 10
+grau 55 = 21
+grau 56 = 20
+grau 57 = 31
+grau 58 = 23
+grau 59 = 21
+grau 60 = 14
+grau 61 = 17
+grau 62 = 13
+grau 63 = 12
+grau 64 = 10
+grau 56 = 20
+grau 57 = 31
+grau 58 = 23
+grau 59 = 21
+...
+grau 64 = 10
+grau 65 = 6
+grau 66 = 4
+grau 67 = 11
+...
+grau 76 = 2
+
+---------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 23 --v 500 --e 0.15
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1, separados por número de -: []
+Combinations ocupa 0.00 MB em memoria
+Número de entradas em combinations: 0
+Graph density: 0.1480320641282565
+histogram
+grau 0 = 0
+...
+grau 66 = 21
+grau 67 = 14
+grau 68 = 19
+grau 69 = 28
+grau 70 = 16
+grau 71 = 29
+grau 72 = 28
+grau 73 = 21
+grau 74 = 26
+grau 75 = 27
+grau 76 = 37
+grau 77 = 19
+grau 78 = 23
+grau 79 = 11
+grau 80 = 15
+grau 81 = 13
+grau 82 = 13
+grau 83 = 10
+...
+grau 96 = 2
+
+------------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 23 --v 500 --e 0.08
+Nenhuma aliança defensiva foi encontrada.
+10 maiores valores de combinations > 1: ['0-136-143-144-182-278-5-69-83=842', '0-136-143-144-182-203-5-69-92=796', '0-135-136-143-144-182-203-5-69=796', '0-216-220-239-256-281-69-74=720', '0-136-143-144-182-203-253-5-69-92=706', '0-135-136-143-144-182-203-253-5-69=706', '0-101-216-220-256-281-69-74=696', '0-136-143-144-182-203-5-64-69=682', '0-101-216-220-239-256-69-74=576', 
+'0-101-216-220-239-281-69-74=576']
+Combinations ocupa 29.33 MB em memoria
+Número de entradas em combinations: 821439
+Graph density: 0.07909418837675351
+histogram
+grau 0 = 0
+...
+grau 26 = 0
+grau 27 = 3
+grau 28 = 4
+grau 29 = 5
+grau 30 = 5
+grau 31 = 9
+grau 32 = 20
+grau 33 = 23
+grau 34 = 22
+grau 35 = 25
+grau 36 = 31
+grau 37 = 34
+grau 38 = 30
+grau 39 = 41
+grau 40 = 39
+grau 41 = 31
+grau 42 = 28
+grau 43 = 24
+grau 44 = 27
+grau 44 = 27
+grau 45 = 15
+grau 45 = 15
+grau 46 = 21
+grau 47 = 14
+grau 47 = 14
+grau 48 = 14
+grau 48 = 14
+grau 49 = 6
+...
+
+----------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 23 --v 500 --e 0.005
+Aliança defensiva de tamanho 23 encontrada: [0, 100, 371, 305, 113, 377, 159, 57, 63, 51, 136, 207, 436, 376, 248, 192, 316, 318, 9, 246, 317, 490, 22]
+Conjunto S é aliança: True
+Número de nós explorados e passos dados: 29
+10 maiores valores de combinations > 1: [] 
+Combinations ocupa 0.00 MB em memoria      
+Número de entradas em combinations: 25     
+Graph density: 0.004649298597194389        
+histogram
+grau 0 = 45
+grau 1 = 118
+grau 2 = 146
+grau 3 = 91
+grau 4 = 53
+grau 5 = 27
+grau 6 = 12
+grau 7 = 6
+grau 8 = 2
+
+----------------------------------------------------
+
+$ python src/upgradedFindDefensiveAlliance.py --k 23 --v 500 --e 0.02
+> ficou muito tempo, pegou 1.3GB e não terminou.
+
+Aconteceu o mesmo com os valores de --e 0.07 e 0.05 

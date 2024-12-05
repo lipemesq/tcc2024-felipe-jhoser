@@ -3,11 +3,15 @@ import networkx as nx
 import math
 import json
 from typing import Tuple, Optional, Set, List, Dict
-import matplotlib.pyplot as plt
+from sys import getsizeof
+
 
 debugSteps = False
+saveHistory = False
 explored_nodes = 0
 allowSmallerAlliances = False
+combinations = {}
+skippedNodes = 0
 
 def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
     n = len(grafo.nodes)
@@ -22,19 +26,22 @@ def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
         v_i = list(grafo.nodes)[i]
         S.append(v_i)
         update(grafo, S)
-        S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
+        if saveHistory: S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
         c_v_i = grafo.nodes[v_i]['c_w']
         if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
         explored_nodes += 1
         found, resultado_S = DA(grafo, S, k, S_history)
+        if not found:
+            S.pop()
         i += 1
     return found, resultado_S, S_history
 
 def DA(grafo, S, k, S_history):
     global explored_nodes
+    global skippedNodes
     
     # Seleciona w em S que tem o maior valor de c_w
-    w = max(S, key=lambda v: grafo.nodes[v]['c_w'])
+    w = max(S, key=lambda v: grafo.nodes[v]['c_w'])    
     c_w = grafo.nodes[w]['c_w']
 
     if c_w <= 0 and (len(S) == k or (allowSmallerAlliances and len(S) < k)): # TODO: Manter o limitador?
@@ -49,17 +56,29 @@ def DA(grafo, S, k, S_history):
         t = math.ceil(d_w / 2) + 1
 
         W = [v for v in grafo.neighbors(w) if v not in S]
+        W.sort(key=lambda v: (-len([neighbor for neighbor in grafo.neighbors(v) if neighbor in S]), math.ceil(grafo.degree[v]/2)))
 
         # Tenta expandir S adicionando cada vizinho de w que não está em S
         i = 0
         found = False
         while not found and i < min(t, len(W)):
             w_i = W[i]
+            
+            S_ids = sorted([str(node) for node in S+[w_i]])
+            S_str = '-'.join(S_ids)
+            if S_str not in combinations:
+                combinations[S_str] = 1
+            else:
+                # combinations[S_str] += 1
+                i += 1
+                skippedNodes += 1;
+                continue
+            
             S.append(w_i)
             if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
             update(grafo, S)
             explored_nodes += 1
-            S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
+            if saveHistory: S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
             found, resultado_S = DA(grafo, S, k, S_history)
 
             if not found:
@@ -67,7 +86,7 @@ def DA(grafo, S, k, S_history):
                 S.pop()
                 update(grafo, S)
                 explored_nodes += 1
-                S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
+                if saveHistory: S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
             else:
                 return True, resultado_S  # Aliança encontrada
             i += 1
@@ -105,32 +124,32 @@ def parse_arguments():
     parser.add_argument('--v', type=int,  default=50, help='Numero de vertices ao gerar grafo aleatorio')
     parser.add_argument('--e', type=float,  default=5/100, help='Numero de arestas ao gerar grafo aleatorio')
     parser.add_argument('--k', type=int, default=5, help='Largest size of the defensive alliance to find')
+    parser.add_argument('--seed', type=int, help='Seed ao gerar o grafo')
     parser.add_argument('--debugSteps', action='store_true', help='Print steps along the way')
     parser.add_argument('--allowSmallerAlliances', action='store_true', help='Allow the algorithm to stops when finds a defensive alliance with size < k')
     parser.add_argument('--writeGraphToJson', type=str, help='Name of the file to write the graph to')
+    parser.add_argument('--saveHistory', action='store_true', help='Save the history of S and c_w for each node')
     return parser.parse_args()
 
 if __name__ == "__main__":
     args = parse_arguments()
     debugSteps = args.debugSteps
     allowSmallerAlliances = args.allowSmallerAlliances
+    saveHistory = args.saveHistory
     
     if args.graphFromFile:
         G = nx.read_edgelist(args.input_file)
     else:
-        G = nx.erdos_renyi_graph(args.v, args.e)
+        G = nx.gnm_random_graph(args.v, args.e, args.seed) #.erdos_renyi_graph(args.v, args.e, args.seed)
         
-    # nx.draw(G, with_labels=1)
-    # plt.show()
     found, resultAlliance, steps = main(G, args.k)
 
     jsonResult = dict(nx.node_link_data(G))
 
+    print(f'Número de nós explorados e passos dados: {explored_nodes}')
     if found:
         print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
         print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
-        print(f'Número de nós explorados e passos dados: {explored_nodes}')
-        #print(f'Histórico de S ({len(steps)} passos): {steps}')  # Print the history of S estava vindo muito grande
         jsonResult["defensiveAlliances"] = [{
             "id": 0,
             "nodes": list(resultAlliance) if resultAlliance is not None else []
@@ -148,6 +167,19 @@ if __name__ == "__main__":
     if args.writeGraphToJson:
         with open(args.writeGraphToJson, 'w') as file:            
             file.write(json.dumps(jsonResult))
+            
+    print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
+    print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
+    print(f'Combinações repetidas puladas: {skippedNodes}')
+
+    density = nx.density(G)
+    degree_histogram = nx.degree_histogram(G)
+    
+    print(f'Graph density: {density}')
+    print('histogram')
+    for i, count in enumerate(degree_histogram):
+        print(f'grau {i} = {count}')
+    
 
 # testar inputs em https://csacademy.com/app/graph_editor/
 # inputs, testados com tamanho k=5: 
