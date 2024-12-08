@@ -31,36 +31,46 @@ Além disso, apresentamos um visualizador web que ilustra o funcionamento do alg
 
 ## Fundamentação teórica
 A fim de seguir de forma devida com a análise do problema e do algoritmo, algumas definições teóricas são requeridas:
-
 #### Grafo
 Um grafo $G = (V(G), E(G))$ é um par ordenado que consiste de um conjunto de vértices $V(G)$ e um conjunto de arestas $E(G)$. 
+
 #### Vértice
 Um vértice $v \in V(G)$ é um elemento básico de um grafo, representando um ponto ou nó na estrutura. O conjunto $V(G)$ é finito e contém todos os vértices do grafo.
+
 #### Aresta
 Uma aresta $e \in E(G)$ é um conjunto de dois vértices de $V(G)$. Em um grafo não direcionado, a aresta $\{u, v\}$ conecta os vértices $u$ e $v$, sem direção. Em grafos direcionados, uma aresta $(u, v)$ conecta $u$ a $v$ com uma orientação de $u$ para $v$.
+
 #### Incidencia
 As extremidades de uma aresta são ditas $incidentes$ com a aresta[7], e vice-versa, ou seja, uma aresta $e$ é dita incidente a um vertice $v$ se está aresta se conecta a $v$ em um de seus extremos.
+
 #### Adjacência
 Dois vértices que são incidentes a uma mesma aresta são adjacentes[7], assim como duas arestas que são incidentes a um mesmo vértice, ou seja, um par de vertices distintos $u$ e $v$ são adjacentes se possuem uma aresta que os conectam, da mesma forma que duas arestas distintas $e1$ e $e2$ são adjacentes se são incidentes a um vertice em comum.
+
 #### Vizinhança de um Vértice
 Dois vertices que são incidentes a uma aresta comum, ou seja, dois vértices adjacentes distintos são ditos vizinhos[7]. A vizinhança de um vértice $v \in V(G)$, denotada por $N(v)$, é o conjunto de todos os vértices adjacentes a $v$, ou seja, $N(v) = \{ u \in V(G) \mid \{u, v\} \in E(G) \}$ em grafos não direcionados.
+
 #### Grau de um Vértice
-O grau de um vértice $v$ em um grafo não direcionado $G$ é dado por $d_G(v) = |N(v)|$, ou seja, o número de arestas incidentes a $v$. Neste estudo consideramos apenas grafos não direcionados, portanto o grau de $v$ corresponde ao número de arestas total ligadas a ele.
+O grau de um vértice $v$ em um grafo não direcionado $G$ é dado por $d G(v) = |N(v)|$, ou seja, o número de arestas incidentes a $v$. Neste estudo consideramos apenas grafos não direcionados, portanto o grau de $v$ corresponde ao número de arestas total ligadas a ele.
+
 #### Subgrafo
 Um **subgrafo** de um grafo $G$ é um grafo $F$ cujos conjuntos de vértices e arestas são subconjuntos dos vértices e arestas de $G$. Formalmente, $F$ é um subgrafo de $G$ se $V(F) \subseteq V(G)$ e $E(F) \subseteq E(G)$, e a função que relaciona vértices e arestas em $F$ é a mesma que em $G$, mas restrita ao conjunto de arestas de $F$. Subgrafos podem ser formados a partir das operações de remoção de vértices e remoção de arestas.
-Diz-se que $G$ contém $F$ ou que $F$ está contido em $G$, representado como $G \supseteq F$ ou $F \subseteq G$[7].
-#### Conectividade
-Um grafo é **conexo** se, para toda partição de seu conjunto de vértices em dois conjuntos não vazios $X$ e $Y$, existe uma aresta com uma extremidade em $X$ e a outra extremidade em $Y$, caso contrário, o grafo é desconexo. Em outras palavras, um grafo é desconexo se seu conjunto de vértices pode ser particionado em dois subconjuntos não vazios $X$ e $Y$ de modo que nenhuma aresta tenha uma extremidade em $X$ e outra em $Y$. 
+Diz-se que $G$ contém $F$ ou que $F$ está contido em $G$, representado como $G \supseteq F$ ou $F \subseteq G$.
+
 #### Aliança Defensiva
 Um subconjunto $S \subseteq V$ é uma aliança defensiva se, para cada vértice $v \in S$, a condição a seguir é satisfeita:   $|N(v) \cap S| \geq |N(v) \setminus S|$. 
 Ou seja, para cada vértice $v$ na aliança $S$, o número de vértices adjacentes a $v$ dentro de $S$ deve ser pelo menos igual ao número de vértices adjacentes a $v$ fora de $S$. 
 Isso indica que os vértices $v$ na aliança devem possuir pelo menos tantos vértices dentro da aliança quanto fora dela.
-Para fins deste estudo, toda aliança encontrada deve ser **conexa**.  
+Para fins deste estudo, toda aliança encontrada deve ser **conexa**.
+  
+#### Conectividade
+Um grafo é **conexo** se, para toda partição de seu conjunto de vértices em dois conjuntos não vazios $X$ e $Y$, existe uma aresta com uma extremidade em $X$ e a outra extremidade em $Y$, caso contrário, o grafo é desconexo. Em outras palavras, um grafo é desconexo se seu conjunto de vértices pode ser particionado em dois subconjuntos não vazios $X$ e $Y$ de modo que nenhuma aresta tenha uma extremidade em $X$ e outra em $Y$. 
+  
 #### Busca em Profundidade
 A busca em profundidade é um algoritmo que varre um grafo de forma a evitar ciclos.  Construímos uma árvore adicionando, sempre que possível, um novo vértice a árvore $T$ que seja vizinho do vértice mais recentemente incluído na árvore. Basicamente, examinamos primeiro a lista de adjacência do último vértice adicionado, $x$, para encontrar um vizinho que ainda não esteja em $T$. Se encontrarmos esse vizinho, o adicionamos à árvore. Se não houver vizinhos disponíveis, retrocedemos (*backtrack*) para o vértice adicionado antes de $x$ e verificamos os seus vizinhos, e assim sucessivamente até que todos os vértices tenham sido completamente processados. 
 Chamamos a árvore resultante desta busca de árvore de busca em profundidade ou *DFS-Tree*.
+
 #### Complexidade Computacional
-A complexidade computacional estuda a quantidade de recursos necessários para a execução de algoritmos, especialmente em termos de tempo e espaço. Em ciência da computação, a complexidade computacional é frequentemente representada usando a notação *Big O*, $O(f(n))$ que descreve o crescimento da complexidade em função do tamanho da entrada. Alguns exemplos de classificação de complexidade são:
+A complexidade computacional estuda a quantidade de recursos necessários para a execução de algoritmos, especialmente em termos de tempo e espaço. Em ciência da computação, a complexidade computacional é frequentemente representada usando a notação *Big O*, $O(f(n))$ que descreve o crescimento da complexidade em função do tamanho da entrada .Alguns exemplos de classificação de complexidade são:
   - $O(1)$: Constante, o tempo de execução não depende do tamanho da entrada.
   - $O(n)$: Linear, o tempo de execução cresce proporcionalmente ao tamanho da entrada.
   - $O(n^k)$: Polinomial, o tempo de execução cresce proporcionalmente com relação a potência $k$ constante do tamanho da entrada. Um exemplo de polinômio muito comum são os quadrados $O(n^2)$.
@@ -81,9 +91,24 @@ Antes de entrar na explicação minuciosa do algoritmo, é importante explicar o
 #### Complexidade
 FPT é uma classe de complexidade que trata de problemas *superpolinomiais* (como exponenciais) ao isolar e fixar um parâmetro exponencial específico do problema, chamado $k$, e então transformando a complexidade na função $f(k)*p(n)$. Nesta transformação, $f(k)$ é a complexidade de $k$ e pode ser *superpolinomial*, enquanto $p(n)$ é a função polinomial de $n$. Desta forma, fixando $k$ em valores menores abordar o algoritmo de forma mais tratável, custando muito menos tempo, dependendo do tamanho de $k$.
 
-O algoritmo usado neste estudo foi proposto por \[[[Artigo#^ref1 |1]]], e tem complexidade $O(k^kn)$, e é uma melhora de seu predecessor que tinha complexidade $O((2k - 1)^kk^2n)$.
+O algoritmo usado neste estudo foi proposto por \[[[Artigo#^ref1 |1]]], e tem complexidade $O(k^kn)$, e é uma melhora exponencial de seu predecessor, que tinha complexidade $O((2k − 1)^kk^2n)$. Esse é um avanço substancial, mas ainda é interessante demonstrar como problemas, mesmo parametrizados, crescem rapidamente:
 
-	Incluir uma pequena tabela de valores com alguns (3 ou 4) tempos de algoritmos, como o trivial, o antigo, o novo e mais algum, com diferentes tamanhos de k e n.
+| $k$ | $k^k$          |
+| --- | -------------- |
+| 2   | 4              |
+| 3   | 27             |
+| 4   | 256            |
+| 5   | 3.125          |
+| 6   | 46.656         |
+| 7   | 823.543        |
+| 9   | 387.420.489    |
+| 10  | 10.000.000.000 |
+
+| ![](GraficoKelevK.png)                   |
+| ---------------------------------------- |
+| <center>Gráfico da função $k^k$</center> |
+O propósito do algoritmo então é garantir que o tempo possa ser diminuído de acordo com $k$, sem que seja necessário executar para todo $n-k$ restante.
+
 #### Explicação
 O algoritmo é dividido em duas funções principais, a `main` e a `defensiveAlliance`. A `main` recebe como entrada um Grafo $G$ e um inteiro positivo $k$. De forma intuitiva, a proposta do algoritmo é realizar buscas em profundidade $k$ até encontrar uma aliança defensiva de tamanho $k$ ou todos os vértices terem servido de raiz da busca.
 
@@ -135,20 +160,63 @@ No início de `defensiveAlliance` o algoritmo escolhe o vértice de maior `c_w` 
 
 A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos necessários serem adicionados, ou seja, para que `w` seja defendido dentro da restrição do tamanho máximo `k`. Essa verificação funciona de modo semelhante a uma heurística de busca, poupando tempo ao evitar vértices que não podem ser defendidos posteriormente.
 
-A próxima parte é o que se pode ser chamado de núcleo do algoritmo: de acordo com o Lema 14 estabelecido por \[[[Artigo#^ref1 |1]]], é garantido que, se `S` pode ser expandido até se tornar uma aliança defensiva, então há um vértice no conjunto `W` que leva a esta solução. Assim, novamente o algoritmo poupa a exploração de vértices desnecessários. 
-
-	Explicar brevemente o Lema 14
-##### Lema 14 
-Assuma que $S \subseteq V$ é estendivel para uma aliança defensiva S', onde $|S| <|S'| = k$ então, para qualquer vertice desprotegido $w \in S$, $|S' \cap (N[w] - S|) \ge c_w$[1].
+###### Lema 14 [1].
+Assuma que $S \subseteq V$ é estendivel para uma aliança defensiva S', onde $|S| <|S'| = k$ então, para qualquer vertice desprotegido $w \in S$, $|S' \cap (N[w] - S|) \ge c_w$.
 Em outras palavras se $S$ é estendivel e $w$ é um vertice desprotegido de $S$ então $c_w$ é o número de vizinhos de $w$ fora de $S$ que é necessário para proteger $w$ em $S$.
-Esse lema nós garante também que para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1$  vertices irão conter ao meno um vertice $w_i$, para o qual $S \cup {w_i}$ é estendivel se e somente se S é estendivel.
 
-	Fazer uma estimação da complexidade em termos do numero de arestas COM e SEM o lance do T
+Esse lema é o que podemos considerar como o núcleo do algoritmo, poís ele nós garante também que para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1$  vertices irão conter ao meno um vertice $w_i$, para o qual $S \cup {w_i}$ é estendivel se e somente se S é estendivel.
+
 #### Evitando repetir conjuntos
-Por conta de como $S$ é construido, para cada $w$ em $S$ podemos avaliar até $k$ vertices desprotegidos para serem adicionados a $S$, isso nós leva a explorar no pior caso $k^k$  vertices a cada chamada da função $DefensiveAlliance(G,S,k)$ a partir da função $main(G,k)$.
-Desta forma implementamos uma modificação onde nós guardamos todos os subconjuntos explorados de tamanho $1$ à $k$ de forma ordenada e antes de adicionar um novo conjunto verificamos se ele já não foi previamente visitado. Sabemos que isso nós leva a trocar um problema de tempo por outro de memória nós levando a armazenar no pior caso $\sum_{i=1}^{k} \binom{n}{i}$ subconjuntos.
+Observando o comportamento do algoritmo no visualizador web foi possível notar que um comportamento pouco eficiente: o critério de expansão de $S$ (destacado a seguir) abre margem pra repetir várias vezes a mesma combinação de vértices, levando, principalmente em grafos de grande quantidade de vértices, a muito esforço improdutivo. 
 
-	Explicar a pequena modificação que evita repetir conjuntos
+```
+DefensiveAlliance(G, S, k)
+	inicia v <- vértice de maior c_w em S.
+```
+
+Pensando nisso a equipe elaborou uma solução que armazena todas as combinações já analisadas anteriormente e impede de que novas iterações com elas sejam geradas, cortando toda a sub-árvore subsequente. Isso é feito com a criação de um dicionário e a marcação única de cada combinação:
+
+```
+inicia combinacoes <- dicionário vazio
+```
+
+```
+DefensiveAlliance(G, S, k)
+[...]
+	Para cada vértice w em W:
+		S <- S + w.
+
+		comb_id <- identificadores de S de forma ordenada.
+		Se existe combinacoes[comb_id]:
+			Retira w de S.
+			pula para o próximo vértice.
+		Caso contrário:	
+			cria combinacoes[comb_id].
+
+		Update(G, S).
+		aliança_encontrada <- DefensiveAlliance(G, S, k)
+[...]
+```
+
+Caso não exista uma entrada da combinação no dicionário, cria-se uma e a instância corrente de `S` é analisada. Caso contrário, a instância é ignorada, podando todas as sub-árvores subsequêntes. A complexidade de tempo é se resume a ordenação de, no máximo, $k-1$ elementos, e ao acesso e escrita no dicionário. Ambos são ofuscados pela complexidade geral.
+
+Por outro lado, há um custo sério em termos de espaço. No pior, de não haver aliança e o algoritmo analisar todos os vértices, cada um custando $k^k$, e quando $k=n$, a combinação ocupa espaço $O(2^n)$, que corresponde a guardar todas as combinações de $n$ vértices, variando de tamanho $1$ até $n$. Isso pode ser mitigado ao limitar o tamanho das combinações armazenadas para a região crítica que vai ser repetida mais vezes. A análise desta região está na seção sobre Resultados e discussão.
+
+Quanto ao desempenho, esta técnica permite ao algoritmo poupar muito tempo ao "amortizar" o custo $k^k$ ao longo de várias iterações, pois, como nenhuma combinação é repetida, quanto mais exploradas são as combinações dos vértices, menos combinações existem para serem analisadas.
+
+#### Fazendo escolhas ponderadas
+Outro campo de melhoria no algoritmo que foi notado no visualizador é o da escolha do próximo vértice a ser analisado.
+
+```
+DefensiveAlliance(G, S, k)
+	inicia v <- vértice de maior c_w em S.
+```
+
+Esta escolha, feita as cegas, pode ser melhorada para acelerar o processo de convergência para a aliança, uma vez que ela exista e o nó raiz do algoritmo faça parte dela.
+
+
+	Explicar como funciona.
+
 ## Metodologia
 O projeto é composto por duas partes principais: algoritmos de busca implementados em Python e um visualizador web criado para exibir os passos deste algoritmo. As partes funcionam de forma independente, sendo conectadas apenas pelo formato de entrada e saída dos programas.
 
@@ -171,22 +239,11 @@ Munido destas informações, o visualizador organiza os dados internamente para 
 
 As especificações detalhadas a respeito do uso e características do visualizador estão na documentação do repositório.
 
-## Resultado e discussão
-	Mostrar os resultados de desempenho
-	Mostrar a diferença das pequenas modificações
-O algoritmo foi avaliado com base em dois critérios, o número de nós expandidos e o número de passos (inclusões e remoções de $S$) executados.
-Realizamos experimentos com as seguintes instâncias de grafos:
-
-| Grafo           | Nós expandidos | Passos executados |
-| --------------- | -------------- | ----------------- |
-| $K_{3,3}$       |                |                   |
-| $K_{5,5}$       |                |                   |
-| Grafo bipartido |                |                   |
-|                 |                |                   |
-|                 |                |                   |
+	Adicionar imagens explicando as características interessantes.
 
 ## Conclusão
-	Discussão futura
+	...
+Dentre os diversos temas que podem ser abordados em discussões futuras, destacamos a implementação e análise do algoritmo proposto por \[[[Artigo#^ref1 |1]]] para encontrar Conjuntos Seguros (*Secure Sets*), que segue uma abordagem FPT semelhante ao de alianças defensivas, e pode ser adaptado para o visualizador web para gerar resultados interessantes.
 
 ## Referências
 \[1] [Alliances In Graphs: Parameterized Algorithms And On Partitioning Series-parallel Graphs](https://stars.library.ucf.edu/cgi/viewcontent.cgi?article=4995&context=etd) 
@@ -207,8 +264,6 @@ Realizamos experimentos com as seguintes instâncias de grafos:
 \[6] [T.W. Haynes, D. Knisley, E. Seier, Y. Zou, A quantitative analysis of secondary RNA structure using domination based parameters on trees, BMCBioinformatics 7 (108) (2006) 11.](http://refhub.elsevier.com/S0972-8600(16)30162-1/sb10)
 	Uso de alianças defensivas para estudo das estruturas secundárias do RNA.
 
-\[7]J.A. Bondy and U.S.R Murty. 2008. Graph Theory (3rd. ed.). Springer Publishing Company, Incorporated.
-	
 
 ## Apêndice
 
