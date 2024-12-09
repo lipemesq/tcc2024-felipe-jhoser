@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import networkx as nx
 import math
@@ -22,8 +23,11 @@ def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
     S = []
     S_history = []  # Modified to store c_w of each node at the current moment
 
+    # Ordena os vértices pelo critério |k - dG(v)|
+    sorted_vertices = sorted(grafo.nodes, key=lambda v:-grafo.degree[v])
+
     while not found and i < n:
-        v_i = list(grafo.nodes)[i]
+        v_i = sorted_vertices[i]
         S.append(v_i)
         update(grafo, S)
         if saveHistory: S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
@@ -44,7 +48,7 @@ def DA(grafo, S, k, S_history):
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])    
     c_w = grafo.nodes[w]['c_w']
 
-    if c_w <= 0 and (len(S) == k or (allowSmallerAlliances and len(S) < k)): # TODO: Manter o limitador?
+    if c_w <= 0 and (len(S) == k or (allowSmallerAlliances)): # TODO: Manter o limitador?
         # Todos os vértices em S estão defendidos
         if debugSteps: print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
@@ -145,11 +149,11 @@ if __name__ == "__main__":
     found, resultAlliance, steps = main(G, args.k)
 
     jsonResult = dict(nx.node_link_data(G))
-
-    print(f'Número de nós explorados e passos dados: {explored_nodes}')
+    print(f'{args.k};{explored_nodes};{len(resultAlliance) if found else 0};{found}')
+    # print(f'Número de nós explorados e passos dados: {explored_nodes}')
     if found:
-        print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
-        print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
+        if debugSteps: print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
+        if debugSteps: print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
         jsonResult["defensiveAlliances"] = [{
             "id": 0,
             "nodes": list(resultAlliance) if resultAlliance is not None else []
@@ -159,7 +163,7 @@ if __name__ == "__main__":
         ]
 
     else:
-        print('Nenhuma aliança defensiva foi encontrada.')
+        if debugSteps: print('Nenhuma aliança defensiva foi encontrada.')
         jsonResult["steps"] = [
             {"id": 0, "values": []}
         ]
@@ -168,17 +172,17 @@ if __name__ == "__main__":
         with open(args.writeGraphToJson, 'w') as file:            
             file.write(json.dumps(jsonResult))
             
-    print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
-    print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
-    print(f'Combinações repetidas puladas: {skippedNodes}')
+    if debugSteps: print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
+    if debugSteps: print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
+    if debugSteps: print(f'Combinações repetidas puladas: {skippedNodes}')
 
     density = nx.density(G)
     degree_histogram = nx.degree_histogram(G)
     
-    print(f'Graph density: {density}')
-    print('histogram')
+    if debugSteps: print(f'Graph density: {density}')
+    if debugSteps: print('histogram')
     for i, count in enumerate(degree_histogram):
-        print(f'grau {i} = {count}')
+        if debugSteps: print(f'grau {i} = {count}')
     
 
 # testar inputs em https://csacademy.com/app/graph_editor/

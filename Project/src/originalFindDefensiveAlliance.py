@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import networkx as nx
 import math
@@ -139,10 +140,11 @@ if __name__ == "__main__":
 
     jsonResult = dict(nx.node_link_data(G))
 
-    print(f'Número de nós explorados e passos dados: {explored_nodes}')
+    print(f'{args.k};{explored_nodes};{found}')
+    if debugSteps: print(f'Número de nós explorados e passos dados: {explored_nodes}')
     if found:
-        print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
-        print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
+        if debugSteps: print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
+        if debugSteps: print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
         #print(f'Histórico de S ({len(steps)} passos): {steps}')  # Print the history of S estava vindo muito grande
         jsonResult["defensiveAlliances"] = [{
             "id": 0,
@@ -153,7 +155,7 @@ if __name__ == "__main__":
         ]
 
     else:
-        print('Nenhuma aliança defensiva foi encontrada.')
+        if debugSteps: print('Nenhuma aliança defensiva foi encontrada.')
         jsonResult["steps"] = [
             {"id": 0, "values": []}
         ]
@@ -162,10 +164,10 @@ if __name__ == "__main__":
         with open(args.writeGraphToJson, 'w') as file:            
             file.write(json.dumps(jsonResult))
             
-    print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
+    if debugSteps: print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
     # print(f'10 maiores valores de combinations > 1, separados por número de -: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: (x[1]), reverse=True)][:10]}')
-    print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
-    print(f'Número de entradas em combinations: {len(combinations.keys())}')
+    if debugSteps: print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
+    if debugSteps: print(f'Número de entradas em combinations: {len(combinations.keys())}')
     # Calculate and print the maximum degree and average degree of the graph
     # degrees = G.degree()
     # max_degree = max(degrees, key=lambda x: x[1])[1]
@@ -174,10 +176,10 @@ if __name__ == "__main__":
     degree_histogram = nx.degree_histogram(G)
     # print(f'Maximum degree in the graph: {max_degree}')
     # print(f'Average degree in the graph: {avg_degree}')
-    print(f'Graph density: {density}')
-    print('histogram')
+    if debugSteps: print(f'Graph density: {density}')
+    if debugSteps: print('histogram')
     for i, count in enumerate(degree_histogram):
-        print(f'grau {i} = {count}')
+        if debugSteps: print(f'grau {i} = {count}')
     
 
 # testar inputs em https://csacademy.com/app/graph_editor/
