@@ -5,9 +5,7 @@ Jhoser Allaf, GRR20166838
 ## Resumo
 Este estudo explora o problema de encontrar alianças defensivas em grafos, um tema relevante na teoria dos grafos com aplicações em diversas áreas, desde análise de mercado, redes sociais e biologia. Definimos uma aliança defensiva como um subconjunto de vértices onde cada vértice possui pelo menos tantos vizinhos dentro do conjunto quanto fora dele, de forma a ter sempre mais "aliados" do que "inimigos". O texto se concentra na formulação do problema, na análise da complexidade computacional e na implementação de um algoritmo eficiente para a identificação dessas alianças.
 
-Apresentamos um algoritmo FPT baseado em busca em profundidade, que explora sistematicamente os vértices do grafo para encontrar alianças defensivas de tamanho específico, e um visualizador web desenvolvido que permite a visualização passo a passo do processo de busca.
-
-	Conclusão?
+Apresentamos um algoritmo FPT baseado em busca em profundidade, que explora sistematicamente os vértices do grafo para encontrar alianças defensivas de tamanho específico, juntamente com duas novas melhorias que apresentam melhora significativa no desempenho, e um visualizador web desenvolvido que permite a visualização passo a passo do processo de busca.
 
 ## Sumário
 ```table-of-contents
@@ -27,7 +25,7 @@ Neste artigo, abordamos o problema de encontrar alianças defensivas em grafos, 
 
 A complexidade computacional associada à identificação de alianças defensivas é desanimadora, e fazemos dela o ponto central deste estudo. Através da perspectiva atenuante do algoritmo FPT de busca em profundidade proposto por \[[[Artigo#^ref1 |1]]], buscamos entender a eficiência e a viabilidade de encontrar tais alianças em grafos de diferentes tamanhos e estruturas.
 
-Além disso, apresentamos um visualizador web que ilustra o funcionamento do algoritmo, permitindo uma compreensão mais intuitiva dos passos envolvidos na busca por alianças defensivas, e disponibilizamos em um repositório o algoritmo final e otimizado em *Python*. A seguir, detalharemos a fundamentação teórica necessária para a compreensão do tema, além de descrever a metodologia utilizada e os resultados obtidos.
+Além disso, apresentamos um visualizador web que ilustra o funcionamento do algoritmo, permitindo uma compreensão mais intuitiva dos passos envolvidos na busca por alianças defensivas, propomos duas melhorias para a eficiência do algoritmo e disponibilizamos em um repositório o algoritmo final e otimizado em *Python*. A seguir, detalharemos a fundamentação teórica necessária para a compreensão do tema, além de descrever a metodologia utilizada e os resultados obtidos.
 
 ## Fundamentação teórica
 A fim de seguir de forma devida com a análise do problema e do algoritmo, algumas definições teóricas são requeridas:
@@ -237,35 +235,77 @@ Para montar a visualização é necessário que seja fornecido como entrada um g
 
 Munido destas informações, o visualizador organiza os dados internamente para melhorar o desempenho e a decisão de cada caraterística visual do grafo e então personaliza uma *view* HTML, dada pela biblioteca [3], que cuida da renderização e simulação física do grafo.
 
-As especificações detalhadas a respeito do uso e características do visualizador estão na documentação do repositório.
+Dentre as funcionalidades, vale destacar duas principais: a visualização do conjunto $S$ a cada etapa do algoritmo e o mapa de calor dos nós explorados.
 
-	Adicionar imagens explicando as características interessantes.
+#### Visualização por passos
+Ao carregar um grafo com o conjunto de passos, é possível navegar por cada um deles. Em um certo passo, os vértices e arestas sem da fronteira de $S$ são desenhados com uma cor cinza escura, e os vértices dentro de $S$ ficam coloridos com a cor
+- azul, se estiverem desprotegidos;
+- ou verde, se estiverem devidamente protegidos.
+
+Ao finalizar o algoritmo e desenhar a aliança, ela é colorida de verde escuro.
+
+| ![[GrafoSteps1.png]]                  |
+| ------------------------------------- |
+| <center>Passo 1 do algoritmo</center> |
+
+| ![[GrafoSteps2.png]]                  |
+| ------------------------------------- |
+| <center>Passo 2 do algoritmo</center> |
+
+| ![[GrafoSteps3.png]]                  |
+| ------------------------------------- |
+| <center>Passo 3 do algoritmo</center> |
+
+| ![[GrafoStepsN.png]]                      |
+| ----------------------------------------- |
+| <center>Passo final do algoritmo</center> |
+
+#### Mapa de calor
+É possível também ativar a visualização do mapa de calor, que colore os vértices de acordo com a quantidade de vezes que ele foi explorado pelo algoritmo.
+
+| ![[GrafoHeatmap.png]]                   |
+| --------------------------------------- |
+| <center>Mapa de calor do grafo</center> |
+Essa ferramenta em particular incentivou questionamentos interessantes a respeito da eficiência do algoritmo, como "como evitar a alta taxa de repetição de um grupo de vértices".
+
+## Resultados e discussão
+O algoritmo originalmente estudado e a versão com as melhorias propostas foram analisadas e submetidas a um conjunto de testes para melhor ilustrar o impacto e eficiência de cada uma. Visto que o problema continua sendo NP-completo, há pouco a ser feito para valores realmente grandes, mas foi possível sim observar uma ampliação dos valores considerados "razoáveis" pelo algoritmo FPT.
+
+	Inserir testes aqui
+
+Foi observado um padrão interessante na eficiência com relação ao grau médio dos vértices (chamaremos de $G_m$) e $k$; o número de nós explorados atinge um ápice para valores de $k$ próximos de $G_m$, criando uma "zona difícil", e suaviza a medida que a diferença aumenta. 
+
+Para valores de $G_m$ muito maiores que $k$ isso acontece porque o algoritmo pode descartar muitas combinações através do critério `Se v.c_w <= k - tamanho de S:`. Essa linha garante que o próximo nó a ser expandido ao menos tem as condições de ser protegido dado o tamanho atual de $S$.
+
+Por outro lado, valores de $k$ muito menores do que $G_m$, foi observado uma probabilidade maior de haver uma aliança defensiva. A modificação de "Busca ponderada", em especial, mostrou acelerar muito o processo de determinação da aliança quando ela existe.
+
+	Explicar como.
+
+Por fim, a modificação de "Evitar repetir conjuntos" mostrou-se acelerar o processo tanto no melhor caso quanto no pior, pois garante que somente novas combinações são testadas.
 
 ## Conclusão
-	...
-Dentre os diversos temas que podem ser abordados em discussões futuras, destacamos a implementação e análise do algoritmo proposto por \[[[Artigo#^ref1 |1]]] para encontrar Conjuntos Seguros (*Secure Sets*), que segue uma abordagem FPT semelhante ao de alianças defensivas, e pode ser adaptado para o visualizador web para gerar resultados interessantes.
+O estudo como um todo foi bastante produtivo dentro do tema, e possibilitou compreensão significativa do que são e como encontrar alianças defensivas. O visualizador web, como ferramenta didática, foi bastante aproveitados para a compreensão e elaboração das melhorias propostas ao algoritmo.
+
+Também foi produtivo experimentar na prática a complexidade de um problema NP-completo e uma das ferramentas usadas para contornar esse degrau gigantesco na complexidade.
+
+Dentre os diversos temas que podem ser abordados em discussões futuras, destacamos a implementação e análise do algoritmo proposto por \[[[Artigo#^ref1 |1]]] para encontrar Conjuntos Seguros (*Secure Sets*), que segue uma abordagem FPT semelhante ao de alianças defensivas, e pode ser adaptado para o visualizador web para gerar resultados valiosos.
+
+Outro ponto de possível expansão é o de pré-análise de grafos para a determinação de potencial de uma aliança de tamanho $k$, partindo da análise feita sobre o grau médio e a "zona difícil". 
 
 ## Referências
-\[1] [Alliances In Graphs: Parameterized Algorithms And On Partitioning Series-parallel Graphs](https://stars.library.ucf.edu/cgi/viewcontent.cgi?article=4995&context=etd) 
-	Capítulo 4.1.1, "FPT-Algorithm for General Graphs". Este capítulo propõe um algoritmo FPT (Fixed-Parameter Tractable Algorithm) para busca de uma aliança defensiva em um grafo geral com tamanho máximo de K. A complexidade é de $O(k^kn)$. ^ref1
+\[1] [Alliances In Graphs: Parameterized Algorithms And On Partitioning Series-parallel Graphs](https://stars.library.ucf.edu/cgi/viewcontent.cgi?article=4995&context=etd) ^ref1
 
-\[2] [P. Kristiansen, S.M. Hedetniemi, S.T. Hedetniemi, Alliances in graphs, J. Combin. Math. Combin. Comput. 48 (2004) 157–177.](http://refhub.elsevier.com/S0972-8600(16)30162-1/sb1)
-	Referência a usar alianças defensivas pra guerra. ^ref2
+\[2] [P. Kristiansen, S.M. Hedetniemi, S.T. Hedetniemi, Alliances in graphs, J. Combin. Math. Combin. Comput. 48 (2004) 157–177.](http://refhub.elsevier.com/S0972-8600(16)30162-1/sb1)^ref2
 
 \[3] [Partitioning A Graph In Alliances And Its Application To Data Clustering](https://stars.library.ucf.edu/cgi/viewcontent.cgi?article=1191&context=etd)
-	 Capítulos 1-5, para aprendizado em geral de grafos e alianças. 
 
 \[4] [Alliances in graphs: Parameters, properties and applications—A survey](https://www.sciencedirect.com/science/article/pii/S0972860016301621)
-	Capítulo 1.1, história e aplicações de aliança. 
 
 \[5] [react-force-graph](https://github.com/vasturiano/react-force-graph)
-	Biblioteca reativa que implementa uma div (em HTML) que permite a visualização personalizada de um grafo em ambos 2D e 3D. ^
 
 \[6] [T.W. Haynes, D. Knisley, E. Seier, Y. Zou, A quantitative analysis of secondary RNA structure using domination based parameters on trees, BMCBioinformatics 7 (108) (2006) 11.](http://refhub.elsevier.com/S0972-8600(16)30162-1/sb10)
-	Uso de alianças defensivas para estudo das estruturas secundárias do RNA.
-
 
 ## Apêndice
-
-Código do algoritmo - v1
+Código do algoritmo - original
 Código do algoritmo - com as modificações
+Link repositório
