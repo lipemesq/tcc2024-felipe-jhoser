@@ -1,0 +1,30 @@
+1;1;[0],True
+2;9;[7, 26],True
+3;34;None,False
+4;25;[15, 22, 5, 25],True
+5;32;None,False
+6;46;None,False
+7;34;None,False
+8;34;None,False
+9;36;None,False
+10;32;None,False
+11;34;None,False
+12;38;None,False
+13;30;None,False
+14;38;None,False
+15;30;None,False
+16;32;None,False
+17;32;None,False
+18;34;None,False
+19;32;None,False
+20;30;None,False
+21;38;None,False
+22;32;None,False
+23;34;None,False
+24;34;None,False
+25;32;None,False
+26;32;None,False
+27;40;None,False
+28;32;None,False
+29;34;None,False
+30;34;None,False

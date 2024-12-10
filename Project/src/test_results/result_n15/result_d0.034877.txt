@@ -1,0 +1,15 @@
+1;1;[0],True
+2;2;[0, 8],True
+3;3;[0, 14, 2],True
+4;15;None,False
+5;21;None,False
+6;29;None,False
+7;25;None,False
+8;35;None,False
+9;49;None,False
+10;19;None,False
+11;29;None,False
+12;37;None,False
+13;15;None,False
+14;23;None,False
+15;21;None,False
