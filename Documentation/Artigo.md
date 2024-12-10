@@ -87,7 +87,7 @@ Os problemas de decisão, como os envolvendo alianças, podem ser classificados 
 ### O algoritmo
 Antes de entrar na explicação minuciosa do algoritmo, é importante explicar o que é um algoritmo FPT. 
 #### Complexidade
-FPT é uma classe de complexidade que trata de problemas *superpolinomiais* (como exponenciais) ao isolar e fixar um parâmetro exponencial específico do problema, chamado $k$, e então transformando a complexidade na função $f(k)*p(n)$. Nesta transformação, $f(k)$ é a complexidade de $k$ e pode ser *superpolinomial*, enquanto $p(n)$ é a função polinomial de $n$. Desta forma, fixando $k$ em valores menores abordar o algoritmo de forma mais tratável, custando muito menos tempo, dependendo do tamanho de $k$.
+FPT (Fixed-Parameter Tractable) é uma classe de complexidade que trata de problemas parametrizáveis (como os de complexidade exponencial) ao isolar e fixar um parâmetro específico do problema, chamado $k$, e então expressando a complexidade na forma $f(k)*p(n)$. Desta forma, $f(k)$ é a parte da complexidade que depende exclusivamente de $k$ e pode ser *superpolinomial*, enquanto $p(n)$ é uma função polinomial de $n$. Sendo assim, fixar $k$ em valores pequenos nos permite abordar o algoritmo de forma mais tratável, custando muito menos tempo, a depender do tamanho de $k$.
 
 O algoritmo usado neste estudo foi proposto por \[[[Artigo#^ref1 |1]]], e tem complexidade $O(k^kn)$, e é uma melhora exponencial de seu predecessor, que tinha complexidade $O((2k − 1)^kk^2n)$. Esse é um avanço substancial, mas ainda é interessante demonstrar como problemas, mesmo parametrizados, crescem rapidamente:
 
@@ -108,7 +108,7 @@ O algoritmo usado neste estudo foi proposto por \[[[Artigo#^ref1 |1]]], e tem co
 O propósito do algoritmo então é garantir que o tempo possa ser diminuído de acordo com $k$, sem que seja necessário executar para todo $n-k$ restante.
 
 #### Explicação
-O algoritmo é dividido em duas funções principais, a `main` e a `defensiveAlliance`. A `main` recebe como entrada um Grafo $G$ e um inteiro positivo $k$. De forma intuitiva, a proposta do algoritmo é realizar buscas em profundidade $k$ até encontrar uma aliança defensiva de tamanho $k$ ou todos os vértices terem servido de raiz da busca.
+O algoritmo é dividido em duas funções principais, a `main` e a `defensiveAlliance`. A `main` recebe como entrada um Grafo $G$ e o tamanho da aliança desejada, um inteiro positivo $k$. De forma intuitiva, a proposta do algoritmo é realizar buscas em profundidade $k$ até encontrar uma aliança defensiva de tamanho $k$ ou todos os vértices terem servido de raiz da busca.
 
 ```
 Main(G,k)
@@ -162,7 +162,7 @@ A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos nece
 Assuma que $S \subseteq V$ é estendivel para uma aliança defensiva S', onde $|S| <|S'| = k$ então, para qualquer vertice desprotegido $w \in S$, $|S' \cap (N[w] - S|) \ge c_w$.
 Em outras palavras se $S$ é estendivel e $w$ é um vertice desprotegido de $S$ então $c_w$ é o número de vizinhos de $w$ fora de $S$ que é necessário para proteger $w$ em $S$.
 
-Esse lema é o que podemos considerar como o núcleo do algoritmo, poís ele nós garante também que para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1$  vertices irão conter ao meno um vertice $w_i$, para o qual $S \cup {w_i}$ é estendivel se e somente se S é estendivel.
+Esse lema é o que podemos considerar como o núcleo do algoritmo, poís ele nós garante também que para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1$  vértices contém ao menos um vértice $w_i$ para o qual $S \cup {w_i}$ é estendivel se e somente se S é estendivel.
 
 #### Evitando repetir conjuntos
 Observando o comportamento do algoritmo no visualizador web foi possível notar que um comportamento pouco eficiente: o critério de expansão de $S$ (destacado a seguir) abre margem pra repetir várias vezes a mesma combinação de vértices, levando, principalmente em grafos de grande quantidade de vértices, a muito esforço improdutivo. 
@@ -202,19 +202,18 @@ Por outro lado, há um custo sério em termos de espaço. No pior, de não haver
 
 Quanto ao desempenho, esta técnica permite ao algoritmo poupar muito tempo ao "amortizar" o custo $k^k$ ao longo de várias iterações, pois, como nenhuma combinação é repetida, quanto mais exploradas são as combinações dos vértices, menos combinações existem para serem analisadas.
 
-#### Fazendo escolhas ponderadas
-Outro campo de melhoria no algoritmo que foi notado no visualizador é o da escolha do próximo vértice a ser analisado.
-
+#### Priorização dos vertices expostos
 ```
 DefensiveAlliance(G, S, k)
 	inicia v <- vértice de maior c_w em S.
 ```
+Ao iniciarmos $DefensiveAlliance(G,S,k)$ atribuindo $v$ o vertice em $W$ com maior $c_w$ nós garantimos que a maior prioridade em cada chamada recursiva da função é proteger o vertice mais "exposto". 
 
-Esta escolha, feita as cegas, pode ser melhorada para acelerar o processo de convergência para a aliança, uma vez que ela exista e o nó raiz do algoritmo faça parte dela.
-
-
-	Explicar como funciona.
-
+Assim obtemos também um critério de parada consistente, ou seja, quando o vetice com maior $c_w$ ter $c_w \le 0$ e $|S| = k|$, teremos duas informações fundamentais sobre o contexto da execução:
+	1 - Se $c_w \le 0$, então todos os vertices em $S$ estão protegidos.
+	2 - Se $|S|=k$, encontramos a aliança defensiva procurada.
+	
+É importante salientar que no artigo o critério de parada é unicamente a condição de $c_w \le 0$ e forçar que o algoritmo busque formar a aliança de tamanho exatamente $k$.
 ## Metodologia
 O projeto é composto por duas partes principais: algoritmos de busca implementados em Python e um visualizador web criado para exibir os passos deste algoritmo. As partes funcionam de forma independente, sendo conectadas apenas pelo formato de entrada e saída dos programas.
 
@@ -305,6 +304,7 @@ Outro ponto de possível expansão é o de pré-análise de grafos para a determ
 
 \[6] [T.W. Haynes, D. Knisley, E. Seier, Y. Zou, A quantitative analysis of secondary RNA structure using domination based parameters on trees, BMCBioinformatics 7 (108) (2006) 11.](http://refhub.elsevier.com/S0972-8600(16)30162-1/sb10)
 
+\[7] J.A. Bondy and U.S.R Murty. 2008. Graph Theory (3rd. ed.). Springer Publishing Company, Incorporated.
 ## Apêndice
 Código do algoritmo - original
 Código do algoritmo - com as modificações

@@ -1,0 +1,15 @@
+1;15;None,False
+2;2;[0, 6],True
+3;3;[0, 8, 12],True
+4;17;[3, 5, 8, 0],True
+5;10;[1, 6, 3, 8, 13],True
+6;6;[0, 4, 5, 13, 1, 2],True
+7;55;None,False
+8;8;[0, 7, 10, 1, 3, 6, 11, 13],True
+9;97;None,False
+10;81;None,False
+11;11;[0, 8, 10, 11, 5, 4, 1, 2, 14, 7, 6],True
+12;45;None,False
+13;317;None,False
+14;577;None,False
+15;391;None,False
