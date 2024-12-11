@@ -270,15 +270,25 @@ Essa ferramenta em particular incentivou questionamentos interessantes a respeit
 ## Resultados e discussão
 O algoritmo originalmente estudado e a versão com as melhorias propostas foram analisadas e submetidas a um conjunto de testes para melhor ilustrar o impacto e eficiência de cada uma. Visto que o problema continua sendo NP-completo, há pouco a ser feito para valores realmente grandes, mas foi possível sim observar uma ampliação dos valores considerados "razoáveis" pelo algoritmo FPT.
 
-	Inserir testes aqui
+Para testar o algoritmo utilizamos a função da biblioteca `networkx nx.erdos_renyi_graph(v,e,seed)` onde `v` é o número de vértices `e` é a probabilidade de 2 vertices formarem uma aresta, e `seed` é uma semente para geração do Grafo.
 
-Foi observado um padrão interessante na eficiência com relação ao grau médio dos vértices (chamaremos de $G_m$) e $k$; o número de nós explorados atinge um ápice para valores de $k$ próximos de $G_m$, criando uma "zona difícil", e suaviza a medida que a diferença aumenta. 
+Para os testes a seguir foram fixados os seguintes seguintes parametros `v=30` `e=0.333` e `seed=100` e executamos para `k` variando entre `1` e `29`.
+![[Execução sem repetição de conjuntos.png]]
+Execução do algoritmo upgradedupgradedFindDefensiveAlliance sem repetição de conjuntos, é possível notar que o número maximo de nós explorados foi de aproximadamente 1 milhão de nós.
 
-Para valores de $G_m$ muito maiores que $k$ isso acontece porque o algoritmo pode descartar muitas combinações através do critério `Se v.c_w <= k - tamanho de S:`. Essa linha garante que o próximo nó a ser expandido ao menos tem as condições de ser protegido dado o tamanho atual de $S$.
+![[Execução com repetição de conjuntos.png]]
+Sem a restrição de repetição de conjuntos o número de nós explorados nesse caso saltou de 1 milhão para 100 milhões. 
 
-Por outro lado, valores de $k$ muito menores do que $G_m$, foi observado uma probabilidade maior de haver uma aliança defensiva. A modificação de "Busca ponderada", em especial, mostrou acelerar muito o processo de determinação da aliança quando ela existe.
+Salvar os conjuntos resulta em uma melhora significativa na redução do número de nós a serem explorados, porém nós traz um novo problema pois o espaço necessário para armazenar todos esses conjuntos no pior caso é $n \sum_{i=0}^{k} \binom{n}{i}<2^n$, ou seja, acabamos trocando um tempo exponencial, por espaço exponencial.
 
-	Explicar como.
+Foi observado um padrão interessante na eficiência com relação ao grau médio dos vértices do grafo $d(G)$ e $k$; o número de nós explorados atinge um ápice para valores de $k$ próximos de $d(G)$ criando uma "zona difícil", e suaviza a medida que a diferença aumenta. 
+
+Para valores de $d(G)$ muito maiores que $k$ isso acontece porque o algoritmo pode descartar muitas combinações através do critério `Se v.c_w <= k - tamanho de S:`. Essa linha garante que o próximo nó a ser expandido ao menos tem as condições de ser protegido dado o tamanho atual de $S$.
+
+Por outro lado, valores de $k$ muito menores do que $d(G)$, foi observado uma probabilidade maior de haver uma aliança defensiva. A modificação de na ordenação dos vértices de `W` com base em quantos vizinhos ele possui em $S$ e $\lfloor d(v)/2 \rfloor$, em especial, mostrou acelerar muito o processo de determinação da aliança quando ela existe.
+
+Ao que indica isso se deve que quando a $S$ pode ser expandido para uma aliança de tamanho $k$ nós estaremos fazendo as escolhas que prioriza a defesa dos vertices que já estão em $S$.
+(como dizer que estamos escolhendo os caras mais obvios primeiro de um jeito inteligente?)
 
 Por fim, a modificação de "Evitar repetir conjuntos" mostrou-se acelerar o processo tanto no melhor caso quanto no pior, pois garante que somente novas combinações são testadas.
 
