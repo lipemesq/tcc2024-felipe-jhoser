@@ -279,7 +279,7 @@ Execução do algoritmo upgradedupgradedFindDefensiveAlliance sem repetição de
 ![[Execução com repetição de conjuntos.png]]
 Sem a restrição de repetição de conjuntos o número de nós explorados nesse caso saltou de 1 milhão para 100 milhões. 
 
-Salvar os conjuntos resulta em uma melhora significativa na redução do número de nós a serem explorados, porém nós traz um novo problema pois o espaço necessário para armazenar todos esses conjuntos no pior caso é $n \sum_{i=0}^{k} \binom{n}{i}<2^n$, ou seja, acabamos trocando um tempo exponencial, por espaço exponencial.
+Salvar os conjuntos resulta em uma melhora significativa na redução do número de nós a serem explorados, porém nós traz um novo problema pois o espaço necessário para armazenar todos esses conjuntos no pior caso é $\sum_{i=0}^{k} \binom{n}{i}<2^n$, ou seja, acabamos trocando um tempo exponencial, por espaço exponencial.
 
 Foi observado um padrão interessante na eficiência com relação ao grau médio dos vértices do grafo $d(G)$ e $k$; o número de nós explorados atinge um ápice para valores de $k$ próximos de $d(G)$ criando uma "zona difícil", e suaviza a medida que a diferença aumenta. 
 
