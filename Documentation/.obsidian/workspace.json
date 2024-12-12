@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Artigo.md",
+                "file": "Algoritmo FPT para alianças defensivas em grafos.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Artigo"
+              "title": "Algoritmo FPT para alianças defensivas em grafos"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Conhecimentos.md",
+                "file": "Algoritmo FPT para alianças defensivas em grafos.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Conhecimentos"
+              "title": "Algoritmo FPT para alianças defensivas em grafos"
             }
           }
         ]
@@ -57,7 +57,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "Explorador de arquivos"
             }
           },
           {
@@ -129,24 +129,24 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "command-palette:Open command palette": false,
-      "markdown-importer:Open format converter": false
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "markdown-importer:Abrir importador Markdown": false
     }
   },
   "active": "dfc4625279dd8eae",
   "lastOpenFiles": [
+    "Referências.md",
+    "Algoritmo FPT para alianças defensivas em grafos.md",
+    "Conhecimentos.md",
     "Imagens/GrafoHeatmap.png",
     "Imagens/GrafoStepsN.png",
     "Imagens/GrafoSteps3.png",
-    "Artigo.md",
     "Imagens/GrafoSteps2.png",
     "Imagens/GrafoSteps1.png",
     "Planejamento.md",
-    "Conhecimentos.md",
-    "Referências.md",
     "Apresentação.md",
     "snippet.css.md",
     "Untitled",
