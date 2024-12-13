@@ -121,6 +121,8 @@ Main(G,k)
 		aliança_encontrada <- DefensiveAlliance(S).
 		Se aliança_encontrada:
 			retorne aliança_encontrada.
+		retira v de S
+		Update(G, S)
 			
 	retorne "Sem aliança";
 ```
@@ -153,6 +155,7 @@ DefensiveAlliance(G, S, k)
 			Se aliança_encontrada:
 				Devolve aliança_encontrada.
 			Retira w de S.
+			Update(G, S)
 			
 	Retorne NULL;
 ```
