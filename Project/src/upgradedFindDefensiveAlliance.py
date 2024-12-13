@@ -22,17 +22,19 @@ def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
     global explored_nodes
     S = []
     S_history = []  # Modified to store c_w of each node at the current moment
+    
+    init_cw(grafo)
 
     while not found and i < n:
         v_i = list(grafo.nodes)[i]
         S.append(v_i)
-        update(grafo, S)
         if saveHistory: S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
         c_v_i = grafo.nodes[v_i]['c_w']
         if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
         explored_nodes += 1
         found, resultado_S = DA(grafo, S, k, S_history)
         if not found:
+            grafo.nodes[v_i]['c_w'] += 1
             S.pop()
         i += 1
     return found, resultado_S, S_history
@@ -65,19 +67,9 @@ def DA(grafo, S, k, S_history):
         while not found and i < min(t, len(W)):
             w_i = W[i]
             
-            S_ids = sorted([str(node) for node in S+[w_i]])
-            S_str = '-'.join(S_ids)
-            if S_str not in combinations:
-                combinations[S_str] = 1
-            else:
-                # combinations[S_str] += 1
-                i += 1
-                skippedNodes += 1;
-                continue
-            
-            S.append(w_i)
             if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
-            update(grafo, S)
+            update(grafo, S, w_i)
+            S.append(w_i)
             explored_nodes += 1
             if saveHistory: S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
             found, resultado_S = DA(grafo, S, k, S_history)
@@ -85,8 +77,7 @@ def DA(grafo, S, k, S_history):
             if not found:
                 if debugSteps: print(f'Removendo vértice {w_i} de {S}, recalculando c_w.')
                 S.pop()
-                update(grafo, S)
-                explored_nodes += 1
+                reset(grafo, S, w_i)
                 if saveHistory: S_history.append({int(v): grafo.nodes[v]['c_w'] for v in S})
             else:
                 return True, resultado_S  # Aliança encontrada
@@ -98,18 +89,28 @@ def DA(grafo, S, k, S_history):
         # Caso c_w > k - len(S), não é possível expandir S
         return False, None
 
-def update(grafo, S):
-    for v in S:
-        Nv = list(grafo.neighbors(v))
-        n_vizinhos = grafo.degree[v]
-        required_neighbors = math.ceil(n_vizinhos / 2)
+def init_cw(grafo):
+    i = 0
+    while i < len(grafo.nodes):
+        grafo.nodes[i]['c_w'] = math.ceil(grafo.degree[i]/ 2)
+        i += 1 
 
-        # Encontrar a interseção entre Nv e S
-        Nv_in_S = [neighbor for neighbor in Nv if neighbor in S]
-        
-        c_v = required_neighbors - len(Nv_in_S)
-        grafo.nodes[v]['c_w'] = c_v
-        if debugSteps: print(f'Atualizando vértice {v}, novo c_w = {c_v}, vizinhos em S: {len(Nv_in_S)}, requerido: {required_neighbors}')
+
+def update(grafo, S, w):
+    for v in S:
+        if w in list(grafo.neighbors(v)):
+            grafo.nodes[v]['c_w'] -= 1
+            grafo.nodes[w]['c_w'] -= 1
+        c_w = grafo.nodes[v]['c_w']
+        if debugSteps: print(f'Atualizando vértice {v}, novo c_w = {c_w}')
+
+def reset(grafo, S, w):
+    for v in S:
+        if w in list(grafo.neighbors(v)):
+            grafo.nodes[v]['c_w'] += 1
+            grafo.nodes[w]['c_w'] += 1
+        c_w = grafo.nodes[v]['c_w']
+        if debugSteps: print(f'Atualizando vértice {v}, novo c_w = {c_w}')
 
 def is_defensive_alliance(G, S):
     for v in S:
