@@ -13,14 +13,20 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Algoritmo FPT para alianças defensivas em grafos.md",
+                "file": "Apresentação.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Algoritmo FPT para alianças defensivas em grafos"
+              "title": "Apresentação"
             }
-          },
+          }
+        ]
+      },
+      {
+        "id": "935d5c9b0366eece",
+        "type": "tabs",
+        "children": [
           {
             "id": "0f02a5fbec5f33ec",
             "type": "leaf",
@@ -28,7 +34,7 @@
               "type": "markdown",
               "state": {
                 "file": "Algoritmo FPT para alianças defensivas em grafos.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -138,8 +144,12 @@
   },
   "active": "dfc4625279dd8eae",
   "lastOpenFiles": [
-    "Referências.md",
     "Algoritmo FPT para alianças defensivas em grafos.md",
+    "Apresentação.md",
+    "Referências.md",
+    "Imagens Aprensentação/ColdWar.png",
+    "Imagens Aprensentação/PreWWI.png",
+    "Imagens Aprensentação",
     "Imagens/Execução com repetição de conjuntos.png",
     "Conhecimentos.md",
     "Imagens/GrafoHeatmap.png",
@@ -148,7 +158,6 @@
     "Imagens/GrafoSteps2.png",
     "Imagens/GrafoSteps1.png",
     "Planejamento.md",
-    "Apresentação.md",
     "snippet.css.md",
     "Untitled",
     "Imagens/GraficoKelevK.png",
