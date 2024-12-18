@@ -164,8 +164,8 @@ No início de `defensiveAlliance` o algoritmo escolhe o vértice de maior `c_w` 
 
 A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos necessários serem adicionados, ou seja, para que `w` seja defendido dentro da restrição do tamanho máximo `k`. Essa verificação funciona de modo semelhante a uma heurística de busca, poupando tempo ao evitar vértices que não podem ser defendidos posteriormente.
 
-###### Lema 14 [1].
-Assuma que $S \subseteq V$ é estendível para uma aliança defensiva S', onde $|S| <|S'| = k$ então, para qualquer vértice desprotegido $w \in S$, $|S' \cap (N[w] - S|) \ge c_w$.
+##### Lema 14 [1].
+Assuma que $S \subseteq V$ é estendível para uma aliança defensiva $S'$, onde $|S| <|S'| = k$ então, para qualquer vértice desprotegido $w \in S$, $|S' \cap (N[w] - S|) \ge c_w$.
 Em outras palavras se $S$ é estendível e $w$ é um vértice desprotegido de $S$ então $c_w$ é o número de vizinhos de $w$ fora de $S$ que é necessário para proteger $w$ em $S$.
 
 Esse lema é o que podemos considerar como o núcleo do algoritmo, pois ele nos garante também que para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1$  vértices contém ao menos um vértice $w_i$ para o qual $S \cup {w_i}$ é estendível se e somente se S é estendível.
@@ -216,8 +216,8 @@ DefensiveAlliance(G, S, k)
 Ao iniciarmos $DefensiveAlliance(G,S,k)$ atribuindo $v$ o vértice em $W$ com maior $c_w$ nós garantimos que a maior prioridade em cada chamada recursiva da função é proteger o vértice mais "exposto". 
 
 Assim obtemos também um critério de parada consistente, ou seja, quando o vértice com maior $c_w$ ter $c_w \le 0$ e $|S| = k$, teremos duas informações fundamentais sobre o contexto da execução:
-	1 - Se $c_w \le 0$, então todos os vértices em $S$ estão protegidos.
-	2 - Se $|S|=k$, encontramos a aliança defensiva procurada.
+1. se $c_w \le 0$, então todos os vértices em $S$ estão protegidos,
+2. se $|S|=k$, encontramos a aliança defensiva procurada.
 
 ## Metodologia
 O projeto é composto por duas partes principais: algoritmos de busca implementados em Python e um visualizador web criado para exibir os passos deste algoritmo. As partes funcionam de forma independente, sendo conectadas apenas pelo formato de entrada e saída dos programas.

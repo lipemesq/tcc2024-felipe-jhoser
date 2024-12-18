@@ -1,15 +1,15 @@
 #### Introdução (6min)
-3. Apresentações
+1. Apresentações
 	1. Nossos nomes
 	2. Nome do trabalho
-4. "Nosso trabalho é focado em conjuntos específicos de vértices num grafo que são chamados de alianças defensivas. Essas alianças tem uma propriedade muito legal, o que faz jus ao nome maneiro, que é a de garantir que cada um de seus membros estará protegido pelos aliados caso seja atacados pelos vizinhos de fora dessa aliança."
-	1. Imagens de fundo ilustrando alianças de guerra e alianças em grafos.
-	2. Usar imagens da wikipedia.
+2. "Nosso trabalho é focado em conjuntos específicos de vértices num grafo que são chamados de alianças defensivas. Essas alianças tem uma propriedade muito legal, o que faz jus ao nome maneiro, que é a de garantir que cada um de seus membros estará protegido pelos aliados caso seja atacados pelos vizinhos de fora dessa aliança."
+	5. Imagens de fundo ilustrando alianças de guerra e alianças em grafos.
+	6. Usar imagens da wikipedia.
 5. Introduzir brevemente a origem do termo [3] e explicar a definição.
 6. Apresentar algumas aplicações.
 	1. Usar as do artigo que citamos nas referências [3].
 7. "Dito isso, problemas de busca de alianças foram provados serem NP-completos. [...]. Nos deparamos com este artigo que propõe um algoritmo FPT pra tentar viabilizar esse problema."
-8. "Ele não é foi o primeiro, mas achamos interessante porque, 1, não conhecíamos a classe/abordagem FPT, e 2, porque ele usa de uma propriedade especial que permitiu diminuir ainda mais a complexidade estipulada pelos seus antecessores."
+8. . "Ele não é foi o primeiro, mas achamos interessante porque, 1, não conhecíamos a classe/abordagem FPT, e 2, porque ele usa de uma propriedade especial que permitiu diminuir ainda mais a complexidade estipulada pelos seus antecessores."
 
 #### O processo e o visualizador (8 min falando + 6 min demonstrando)
 1. Explicar em 10 segundos como funciona o FPT.
