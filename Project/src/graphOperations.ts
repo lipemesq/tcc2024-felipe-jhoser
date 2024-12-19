@@ -96,7 +96,6 @@ export class Graph {
 			return new Link(sourceNode, targetNode);
 		});
 
-		// Check if json.steps is an array
 		const steps: Step[] = Array.isArray(json.steps)
 			? json.steps.map((s: any) => {
 					const id: number = s.id;

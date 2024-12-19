@@ -171,17 +171,21 @@ const App: React.FC = () => {
 			if (
 				node &&
 				state.steps &&
+				state.steps.length > 0 &&
 				state.steps[step].node_cw.find((ncw) => ncw.node == node.id)
 			) {
 				const nodeIn = state.steps[step].node_cw.find(
 					(ncw) => ncw.node == node.id
 				);
-				if (step == maxSteps - 1) return "green";
-				else {
+				if (step == maxSteps - 1) {
+					if (state.defensiveAlliances?.length ?? 0 > 0)
+						return "green";
+					return "red";
+				} else {
 					if (nodeIn?.cw ?? 1 > 0) return "blue";
 					else return "lightGreen";
 				}
-			} else if (node && state.steps) {
+			} else if (node && state.steps && state.steps.length > 0) {
 				const isNeighbor = state.steps[step].node_cw.some((ncw) => {
 					return state.links.some((link) => {
 						return (
@@ -205,7 +209,12 @@ const App: React.FC = () => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
 
-			if (sourceNode && state.steps && targetNode) {
+			if (
+				sourceNode &&
+				state.steps &&
+				state.steps.length > 0 &&
+				targetNode
+			) {
 				const isSourceIn = state.steps[step].node_cw.find(
 					(ncw) => ncw.node == sourceNode.id
 				);
@@ -226,7 +235,12 @@ const App: React.FC = () => {
 			const sourceNode = state.findNodeById(linkObject.source.id);
 			const targetNode = state.findNodeById(linkObject.target.id);
 
-			if (sourceNode && state.steps && targetNode) {
+			if (
+				sourceNode &&
+				state.steps &&
+				state.steps.length > 0 &&
+				targetNode
+			) {
 				const isSourceIn = state.steps[step].node_cw.find(
 					(ncw) => ncw.node == sourceNode.id
 				);
@@ -257,11 +271,16 @@ const App: React.FC = () => {
 				}
 			}
 
-			if (state.steps && sourceNode && targetNode) {
-				const isSourceIn = state.steps[step].node_cw.find(
+			if (
+				state.steps &&
+				state.steps.length > 0 &&
+				sourceNode &&
+				targetNode
+			) {
+				const isSourceIn = state.steps[step]?.node_cw?.find(
 					(ncw) => ncw.node == sourceNode.id
 				);
-				const isTargetIn = state.steps[step].node_cw.find(
+				const isTargetIn = state.steps[step]?.node_cw?.find(
 					(ncw) => ncw.node === targetNode.id
 				);
 				if (isSourceIn && isTargetIn)
@@ -282,6 +301,19 @@ const App: React.FC = () => {
 			return "lightGrey";
 		},
 		[allianceColors, step, is3DView, highlightLinks]
+	);
+
+	const decideNodeLabel = useCallback(
+		(nodeObject: NodeObject): string => {
+			const node = state.findNodeById(nodeObject.id);
+
+			if (node && state.stepsCount.get(node.id)) {
+				return `Node ${node.id}<br/>(${state.stepsCount.get(node.id)})`;
+			}
+
+			return `Node ${nodeObject.id}`;
+		},
+		[state]
 	);
 
 	const handleViewSwitch = () => {
@@ -322,7 +354,7 @@ const App: React.FC = () => {
 							(link.target as NodeObject).id
 						}`
 					}
-					nodeLabel={(node) => `Node ${node.id}`}
+					nodeLabel={decideNodeLabel}
 					nodeColor={decideNodeColor}
 					enableNodeDrag={false}
 					// onNodeClick={handleNodeClick}
@@ -349,7 +381,7 @@ const App: React.FC = () => {
 							(link.target as NodeObject).id
 						}`
 					}
-					nodeLabel={(node) => `Node ${node.id}`}
+					nodeLabel={decideNodeLabel}
 					nodeColor={decideNodeColor}
 					enableNodeDrag={true}
 					// onNodeClick={handleNodeClick}

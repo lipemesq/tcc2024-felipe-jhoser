@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import argparse
 import networkx as nx
 import math
@@ -21,14 +21,14 @@ def main(grafo, k) -> Tuple[bool, Optional[Set[int]], List[Dict[int, int]]]:
     resultado_S = None
     global explored_nodes
     S = []
-    S_history = []  # Modified to store c_w of each node at the current moment
+    S_history = []
     
     init_cw(grafo)
 
     while not found and i < n:
         v_i = list(grafo.nodes)[i]
         S.append(v_i)
-        if saveHistory: S_history.append({v: grafo.nodes[v]['c_w'] for v in S})  # Record the initial state of S and c_w of each node
+        if saveHistory: S_history.append({v: grafo.nodes[v]['c_w'] for v in S})
         c_v_i = grafo.nodes[v_i]['c_w']
         if debugSteps: print(f'Iniciando com vértice {v_i}, c_w = {c_v_i}')
         explored_nodes += 1
@@ -47,7 +47,7 @@ def DA(grafo, S, k, S_history):
     w = max(S, key=lambda v: grafo.nodes[v]['c_w'])    
     c_w = grafo.nodes[w]['c_w']
 
-    if c_w <= 0 and (len(S) == k or (allowSmallerAlliances and len(S) < k)): # TODO: Manter o limitador?
+    if c_w <= 0 and (len(S) == k or (allowSmallerAlliances and len(S) < k)): 
         # Todos os vértices em S estão defendidos
         if debugSteps: print(f'Aliança defensiva de tamanho {len(S)} encontrada: {S}')
         return True, S.copy()
@@ -66,6 +66,16 @@ def DA(grafo, S, k, S_history):
         found = False
         while not found and i < min(t, len(W)):
             w_i = W[i]
+            
+            S_ids = sorted([str(node) for node in S+[w_i]])
+            S_str = '-'.join(S_ids)
+            if S_str not in combinations:
+                combinations[S_str] = 1
+            else:
+                # combinations[S_str] += 1
+                i += 1
+                skippedNodes += 1;
+                continue
             
             if debugSteps: print(f'Adicionando vértice {w_i} à aliança {S}')
             update(grafo, S, w_i)
@@ -121,16 +131,19 @@ def is_defensive_alliance(G, S):
     return True
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Find the first defensive alliance with size of at most k in a graph.')
-    parser.add_argument('--graphFromFile', type=str, help='Path to the input file')
-    parser.add_argument('--v', type=int,  default=50, help='Numero de vertices ao gerar grafo aleatorio')
-    parser.add_argument('--e', type=float,  default=5/100, help='Numero de arestas ao gerar grafo aleatorio')
-    parser.add_argument('--k', type=int, default=5, help='Largest size of the defensive alliance to find')
-    parser.add_argument('--seed', type=int, help='Seed ao gerar o grafo')
-    parser.add_argument('--debugSteps', action='store_true', help='Print steps along the way')
+    parser = argparse.ArgumentParser(description='Tenta encontrar uma aliança defensiva de tamanho k no grafo.')
+    parser.add_argument('--graphFromFile', type=str, help='Lê o grafo do arquivo, pelo formato edgelist da biblioteca networkx. Não use junto com o --v ou --e.')
+    parser.add_argument('--v', type=int,  default=50, help='Número de vertices ao gerar grafo aleatorio. Use juntamente o --e ou --d.')
+    parser.add_argument('--d', type=float, default=5/100, help='Densidade do grafo. Gera um erdos_renyi_graph. Padrão 5/100. Precisa também do --v.')
+    parser.add_argument('--e', type=int, help='Numero de arestas do grafo. Gera um gnm_random_graph. Precisa também do --v.')
+    parser.add_argument('--k', type=int, default=5, help='Tamanho da aliança a ser buscada.')
+    parser.add_argument('--seed', type=int, help='Seed ao gerar o grafo aleatório.')
+    
+    parser.add_argument('--debugSteps', action='store_true', help='Printa os passos de debug.')
+    parser.add_argument('--extraResults', action='store_true', help='Printa alguns debugs extras.')
     parser.add_argument('--allowSmallerAlliances', action='store_true', help='Allow the algorithm to stops when finds a defensive alliance with size < k')
-    parser.add_argument('--writeGraphToJson', type=str, help='Name of the file to write the graph to')
-    parser.add_argument('--saveHistory', action='store_true', help='Save the history of S and c_w for each node')
+    parser.add_argument('--writeGraphToJson', type=str, help='Escreve o grafo no json especificado no formato lido pelo visualizador web.')
+    parser.add_argument('--saveHistory', action='store_true', help='Permite gravar os passos no json de saída, caso exista. Tem um custo de memória alto.')
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -142,49 +155,42 @@ if __name__ == "__main__":
     if args.graphFromFile:
         G = nx.read_edgelist(args.input_file)
     else:
-        G = nx.erdos_renyi_graph(args.v, args.e, args.seed)
+        if args.e:
+            G = nx.gnm_random_graph(args.v, args.e, args.seed)
+        else:
+            G = nx.erdos_renyi_graph(args.v, args.d, args.seed)
         
     found, resultAlliance, steps = main(G, args.k)
 
     jsonResult = dict(nx.node_link_data(G))
 
-    print(f'{args.k};{explored_nodes};{resultAlliance},{found}')
-    if debugSteps : print(f'Número de nós explorados e passos dados: {explored_nodes}')
+    print(f'- Nós explorados: {explored_nodes}')
     if found:
-        if debugSteps : print(f'Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
-        if debugSteps : print(f'Conjunto S é aliança: {is_defensive_alliance(G, resultAlliance)}')
+        print(f'- Aliança defensiva de tamanho {len(resultAlliance)} encontrada: {resultAlliance}')
+        print(f'- Conjunto S é validado como aliança: {is_defensive_alliance(G, resultAlliance)}')
         jsonResult["defensiveAlliances"] = [{
             "id": 0,
             "nodes": list(resultAlliance) if resultAlliance is not None else []
         }]
-        jsonResult["steps"] = [
-            {"id": int(index), "values": list(step.items())} for index, step in enumerate(steps)
-        ]
+        
 
     else:
-        if debugSteps : print('Nenhuma aliança defensiva foi encontrada.')
-        jsonResult["steps"] = [
-            {"id": 0, "values": []}
-        ]
+        print('Nenhuma aliança defensiva foi encontrada.')
+
+    jsonResult["steps"] = [
+        {"id": int(index), "values": list(step.items())} for index, step in enumerate(steps)
+    ]
     
     if args.writeGraphToJson:
         with open(args.writeGraphToJson, 'w') as file:            
             file.write(json.dumps(jsonResult))
             
-    if debugSteps : print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
-    if debugSteps : print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
-    if debugSteps : print(f'Combinações repetidas puladas: {skippedNodes}')
-
-    density = nx.density(G)
-    degree_histogram = nx.degree_histogram(G)
+    if args.extraResults: 
+        print(f'10 maiores valores de combinations > 1: {[f"{k}={v}" for k, v in sorted(combinations.items(), key=lambda x: x[1], reverse=True)[:10] if v > 1]}')
+        print(f'Combinations ocupa {getsizeof(combinations) / (1024 * 1024):.2f} MB em memoria')
+        print(f'Combinações repetidas puladas: {skippedNodes}')
+        print(f'Graph density: {nx.density(G)}')
+        print('histogram')
+        for i, count in enumerate(nx.degree_histogram(G)):
+            print(f'grau {i} = {count}')
     
-    if debugSteps : print(f'Graph density: {density}')
-    if debugSteps : print('histogram')
-    for i, count in enumerate(degree_histogram):
-        if debugSteps : print(f'grau {i} = {count}')
-    
-
-# testar inputs em https://csacademy.com/app/graph_editor/
-# inputs, testados com tamanho k=5: 
-# k5 tem alianças de tamanho 4 e 5, iniciando do 0
-# 6.in e 7.in tbm

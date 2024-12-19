@@ -12,9 +12,18 @@ const ColorBar: React.FC<ColorBarProps> = ({ stepCount }) => {
 		return `rgb(${r}, ${g}, ${b})`;
 	}).reverse();
 
-	const sortedSteps = Array.from(stepCount.entries())
-		.sort(([, countA], [, countB]) => countB - countA)
-		.filter((_, index) => index % 10 === 0); // Take elements every 10%
+	const maxStep = Math.max(...Array.from(stepCount.values()));
+
+	// const sortedSteps = Array.from({ length: 10 }, (_, i) => [
+	// 	i * (maxStep / 10),
+	// 	i * (maxStep / 10),
+	// ]);
+
+	var sortedSteps: number[] = [];
+	for (let i = 10; i >= 1; i--) {
+		const x = Math.floor((maxStep / 10) * i);
+		sortedSteps.push(x);
+	}
 
 	return (
 		<div
@@ -40,7 +49,7 @@ const ColorBar: React.FC<ColorBarProps> = ({ stepCount }) => {
 					height: "100%",
 				}}
 			>
-				{sortedSteps.map(([step, count], index) => (
+				{sortedSteps.map((step, index) => (
 					<div
 						key={step}
 						style={{
@@ -49,7 +58,7 @@ const ColorBar: React.FC<ColorBarProps> = ({ stepCount }) => {
 							alignItems: "center",
 						}}
 					>
-						{count}
+						{step}
 					</div>
 				))}
 			</div>
