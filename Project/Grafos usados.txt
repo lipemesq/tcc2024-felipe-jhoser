@@ -1,0 +1,6 @@
+ repetindo conjuntos: 
+--v 10 --e 12 --k 4 --seed 101111111
+
+comparando:
+time python3 ./upgradedFindDefensiveAlliance.py --saveHistory --writeGraphToJson demoBig.json --v 50 --d 0.15 --k 10 --seed 7 --extraResults
+time python3 ./originalFindDefensiveAlliance.py --saveHistory --writeGraphToJson demoBig.json --v 50 --d 0.15 --k 10 --seed 7 --extraResults

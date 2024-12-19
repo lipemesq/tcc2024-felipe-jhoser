@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
 import networkx as nx
 import math
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     saveHistory = args.saveHistory
     
     if args.graphFromFile:
-        G = nx.read_edgelist(args.input_file)
+        G = nx.read_edgelist(args.graphFromFile)
     else:
         if args.e:
             G = nx.gnm_random_graph(args.v, args.e, args.seed)
