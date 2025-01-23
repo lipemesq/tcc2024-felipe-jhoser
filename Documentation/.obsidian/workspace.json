@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Apresentação.md",
+                "file": "Algoritmo FPT para alianças defensivas em grafos.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Apresentação"
+              "title": "Algoritmo FPT para alianças defensivas em grafos"
             }
           }
         ]
@@ -124,9 +124,9 @@
   },
   "active": "dfc4625279dd8eae",
   "lastOpenFiles": [
+    "Apresentação.md",
     "Falas Felipe.md",
     "Algoritmo FPT para alianças defensivas em grafos.md",
-    "Apresentação.md",
     "Imagens/GraficoKelevK.png",
     "Referências.md",
     "Imagens Aprensentação/ColdWar.png",

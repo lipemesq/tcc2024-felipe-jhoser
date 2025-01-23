@@ -19,96 +19,72 @@ debugInConsole: false # Print debug info in Obsidian console
 
 ## Introdução
 
-O estudo das alianças em grafos é um campo fascinante que combina conceitos de teoria dos grafos e complexidade computacional. As alianças, especialmente as alianças defensivas, são subconjuntos de vértices que garantem uma forma de defesa mútua entre seus membros; conceito este que pode ser aplicado desde alianças para suporte mútuo entre nações em guerra [2] até análise da estrutura secundária do RNA [6].
+O estudo das alianças em grafos é um campo fascinante que combina conceitos de teoria dos grafos e complexidade computacional. As alianças defensivas são subconjuntos de vértices que garantem uma forma de defesa mútua entre seus membros, de forma semelhante ao que se pensa de uma aliança militar; conceito este que pode ser aplicado desde alianças para suporte mútuo entre nações em guerra [2] até redes de computadores e a análise da estrutura secundária do RNA [6].
 
-Neste estudo, abordamos o problema de encontrar alianças defensivas em grafos, que pode ser formalizado como a identificação de subconjuntos de vértices que satisfazem condições específicas de conectividade e vizinhança. Um grafo $G = (V, E)$ é composto por um conjunto de vértices $V$ e um conjunto de arestas $E$. Uma aliança defensiva é definida como um subconjunto $S \subseteq V$ tal que, para cada vértice $v \in S$, o número de vizinhos de $v$ dentro de $S$ é pelo menos igual ao número de vizinhos de $v$ fora de $S$. Essa propriedade assegura que cada vértice na aliança possui mais aliados do que potenciais inimigos, promovendo assim a segurança do grupo.
+	Tirar essas definições e já falar direto do FPT
+Neste trabalho temos como objetivo encontrar alianças defensivas em grafos, o que pode ser formalizado como um problema de identificação de subconjuntos de vértices que satisfazem condições específicas de conectividade e vizinhança; dado um grafo $G = (V, E)$, uma aliança defensiva é definida como um subconjunto $S \subseteq V$ tal que, para cada vértice $v \in S$, o número de vizinhos de $v$ dentro de $S$ é pelo menos igual ao número de vizinhos de $v$ fora de $S$. Essa propriedade assegura que cada vértice na aliança possui mais aliados do que potenciais inimigos, promovendo assim a segurança do grupo.
 
-A complexidade computacional associada à identificação de alianças defensivas é desanimadora, e fazemos dela o ponto central deste estudo. Através da perspectiva atenuante do algoritmo FPT de proposto por [1], buscamos entender a eficiência e a viabilidade de encontrar tais alianças em grafos de diferentes tamanhos e estruturas.
+Dito isso, a complexidade computacional associada à busca de alianças defensivas é NP-completa. Por isso, analisamos um estudo [1] que propõe um algoritmo FPT que ajuda a resolver este problema de forma mais eficiente, e no processo, estudamos o significado de um "algoritmo FPT".
 
-Além disso, apresentamos um visualizador web que ilustra o funcionamento do algoritmo, permitindo uma compreensão mais intuitiva dos passos envolvidos na busca por alianças defensivas, propomos duas melhorias para a eficiência do algoritmo e disponibilizamos em um repositório o algoritmo final e otimizado em *Python*. A seguir, detalharemos a fundamentação teórica necessária para a compreensão do tema, além de descrever a metodologia utilizada e os resultados obtidos.
+Além disso, apresentamos um visualizador web que ilustra o funcionamento deste algoritmo, permitindo uma compreensão mais intuitiva dos passos envolvidos na busca por alianças defensivas, propomos duas melhorias para a sua eficiência. A seguir, detalharemos a fundamentação teórica necessária para a compreensão do tema, além de descrever a metodologia utilizada e os resultados obtidos.
 
 ## Fundamentação teórica
-A fim de seguir de forma devida com a análise do problema e do algoritmo, algumas definições teóricas são requeridas:
+A fim de trabalharmos com o conceito de alianças defensivas, primeiro é importante lembrar alguns conceitos fundamentais de teoria dos grafos:
+- **Grafo:** Representado como $G = (V, E)$, é composto por um conjunto de vértices $V$ e arestas $E$ que conectam pares de vértices.
+- **Vizinhança:** Para um vértice $v$, a vizinhança $N(v)$ é o conjunto de vértices adjacentes a $v$. O grau de $v$ é $|N(v)|$.
+- **Subgrafo:** Um grafo $F$ é subgrafo de $G$ se $V(F) \subseteq V(G)$ e $E(F) \subseteq E(G)$.
+- **Conectividade:** Um grafo é conexo se existe um caminho entre quaisquer dois vértices.
 
-### Conceitos
-#### Grafo
-Um grafo $G = (V(G), E(G))$ é um par ordenado que consiste de um conjunto de vértices $V(G)$ e um conjunto de arestas $E(G)$. 
+Agora, uma **aliança defensiva** é um subconjunto $S \subseteq V$ se, para cada vértice $v \in S$, o número de vizinhos de $v$ dentro de $S$ é pelo menos igual ao número de vizinhos de $v$ fora de $S$, ou seja:
+$$∣N(v)∩S∣≥∣N(v)∖S∣$$
+Essa definição reflete a ideia de que os vértices de $S$ formam uma estrutura em que cada um de seus vértices estará protegido por si mesmo e pelos seus aliados em caso de "ataque" de seus vizinhos não-aliados.
 
-#### Vértice
-Um vértice $v \in V(G)$ é um elemento básico de um grafo, representando um ponto ou nó na estrutura. O conjunto $V(G)$ é finito e contém todos os vértices do grafo.
+Embora uma aliança defensiva não precise ser conexa, neste trabalho consideramos apenas alianças defensivas **conexas**, onde cada componente conexa é, por definição, uma aliança defensiva.
 
-#### Aresta
-Uma aresta $e \in E(G)$ é um conjunto de dois vértices de $V(G)$. Em um grafo não direcionado, a aresta $\{u, v\}$ conecta os vértices $u$ e $v$, sem direção. Em grafos direcionados, uma aresta $(u, v)$ conecta $u$ a $v$ com uma orientação de $u$ para $v$.
-
-#### Incidência
-As extremidades de uma aresta são ditas $incidentes$ com a aresta [7], e vice-versa, ou seja, uma aresta $e$ é dita incidente a um vértice $v$ se está aresta se conecta a $v$ em um de seus extremos.
-
-#### Adjacência
-Dois vértices que são incidentes a uma mesma aresta são adjacentes [7], assim como duas arestas que são incidentes a um mesmo vértice, ou seja, um par de vértices distintos $u$ e $v$ são adjacentes se possuem uma aresta que os conectam, da mesma forma que duas arestas distintas $e1$ e $e2$ são adjacentes se são incidentes a um vértice em comum.
-
-#### Vizinhança de um Vértice
-Dois vértices que são incidentes a uma aresta comum, ou seja, dois vértices adjacentes distintos são ditos vizinhos [7]. A vizinhança de um vértice $v \in V(G)$, denotada por $N(v)$, é o conjunto de todos os vértices adjacentes a $v$, ou seja, $N(v) = \{ u \in V(G) \mid \{u, v\} \in E(G) \}$ em grafos não direcionados.
-
-#### Grau de um Vértice
-O grau de um vértice $v$ em um grafo não direcionado $G$ é dado por $d(v) = |N(v)|$, ou seja, o número de arestas incidentes a $v$. Neste estudo consideramos apenas grafos não direcionados, portanto o grau de $v$ corresponde ao número de arestas total ligadas a ele.
-
-#### Subgrafo
-Um **subgrafo** de um grafo $G$ é um grafo $F$ cujos conjuntos de vértices e arestas são subconjuntos dos vértices e arestas de $G$. Formalmente, $F$ é um subgrafo de $G$ se $V(F) \subseteq V(G)$ e $E(F) \subseteq E(G)$, e a função que relaciona vértices e arestas em $F$ é a mesma que em $G$, mas restrita ao conjunto de arestas de $F$. Subgrafos podem ser formados a partir das operações de remoção de vértices e remoção de arestas.
-Diz-se que $G$ contém $F$ ou que $F$ está contido em $G$, representado como $G \supseteq F$ ou $F \subseteq G$.
-
-#### Conectividade
-Um grafo é **conexo** se, para toda partição de seu conjunto de vértices em dois conjuntos não vazios $X$ e $Y$, existe uma aresta com uma extremidade em $X$ e a outra extremidade em $Y$, caso contrário, o grafo é desconexo. Em outras palavras, um grafo é desconexo se seu conjunto de vértices pode ser particionado em dois subconjuntos não vazios $X$ e $Y$ de modo que nenhuma aresta tenha uma extremidade em $X$ e outra em $Y$. 
-
-#### Aliança Defensiva
-Um subconjunto $S \subseteq V$ é uma aliança defensiva se, para cada vértice $v \in S$, a condição a seguir é satisfeita:   $|N(v) \cap S| \geq |N(v) \setminus S|$. 
-Ou seja, para cada vértice $v$ na aliança $S$, o número de vértices adjacentes a $v$ dentro de $S$ deve ser pelo menos igual ao número de vértices adjacentes a $v$ fora de $S$. 
-Isso indica que os vértices $v$ na aliança devem possuir pelo menos tantos vértices dentro da aliança quanto fora dela.
-Embora, formalmente, uma aliança não precise ser conexa, note que cada componente conexa de uma aliança é uma aliança por si só. Para fins deste trabalho, toda aliança encontrada deve ser **conexa**. 
-
-#### Busca em Profundidade
-A busca em profundidade é um algoritmo que varre um grafo de forma a evitar ciclos.  Construímos uma árvore adicionando, sempre que possível, um novo vértice a árvore $T$ que seja vizinho do vértice mais recentemente incluído na árvore. Basicamente, examinamos primeiro a lista de adjacência do último vértice adicionado, $x$, para encontrar um vizinho que ainda não esteja em $T$. Se encontrarmos esse vizinho, o adicionamos à árvore. Se não houver vizinhos disponíveis, retrocedemos (*backtrack*) para o vértice adicionado antes de $x$ e verificamos os seus vizinhos, e assim sucessivamente até que todos os vértices tenham sido completamente processados. 
-Chamamos a árvore resultante desta busca de árvore de busca em profundidade ou *DFS-Tree*.
-
-#### Complexidade Computacional
-A complexidade computacional estuda a quantidade de recursos necessários para a execução de algoritmos, especialmente em termos de tempo e espaço. Em ciência da computação, a complexidade computacional é frequentemente representada usando a notação *Big O*, $O(f(n))$, que descreve o crescimento da complexidade como uma função $f(n)$, onde $n$ normalmente é o tamanho da entrada, ou algum outro parâmetro relevante. Alguns exemplos de classificação de complexidade são:
-  - $O(1)$: Constante, o tempo de execução não depende do tamanho da entrada.
-  - $O(n)$: Linear, o tempo de execução cresce proporcionalmente ao tamanho da entrada.
-  - $O(n^k)$: Polinomial, o tempo de execução cresce proporcionalmente com relação a potência $k$ constante do tamanho da entrada. Um exemplo de polinômio muito comum são os quadrados $O(n^2)$.
-  - $O(k^n)$: Exponencial, o tempo de execução cresce de forma exponencial com relação ao tamanho da entrada. No geral, é inviável para grandes entradas.
-  - $O(n!)$ Fatorial, em problemas fatoriais o tempo de execução cresce ainda mais acelerado com relação ao tamanho da entrada do que problemas exponenciais. 
-
-##### Classes de Complexidade:
-Os problemas de decisão, como os envolvendo alianças, podem ser classificados em certas classes de complexidade que separam o quão viáveis é encontrar ou verificar suas soluções para entradas de larga escala. Estas classes não:
-- $P$ (Polinomial): Representa a classe de problemas que podem ser resolvidos em tempo polinomial, ou seja, em $O(n^k)$ para algum inteiro $k$. Em ciência da computação, problemas em $P$ são considerados tratáveis.
-- $NP$ (Tempo polinomial não determinístico): Representa a classe de problemas para os quais, apesar de não sabermos como encontrar solução em tempo polinomial de maneira determinística, dada uma solução, ela pode ser verificada em tempo polinomial por um algoritmo determinístico. Não sabemos se todo problema em $NP$ pode ser resolvido em tempo polinomial, isto é, se $P = NP$, e esse é um dos 7 problemas do milênio que ainda estão em aberto.
-- $NP$-completo: Representa um subconjunto de problemas em $NP$ que são, intuitivamente, tão difíceis quanto qualquer outro problema em $NP$. Para um problema ser dessa classe, são necessárias duas características:    
-	1. Estar em $NP$, ou seja, dada uma solução, ela deve ser verificável em tempo polinomial.
-	2. Ser $NP$-difícil, todo problema em $NP$ pode ser redutível a ele em tempo polinomial.
-  Em outras palavras, caso um problema de classe $NP$-completo seja resolvido em tempo polinomial, todos os outros problemas em $NP$ poderão ser resolvidos em tempo polinomial.
-  
+	Aqui, explicar FPT antes, mas a partir do objetivo do trabalho
+	Mudar o nome do capítulo
+	Na verdade, mudar toda a estrutura dele
 ### O algoritmo
-Como encontrar uma aliança defensiva em um grafo é um problema NP-completo, o algoritmo FPT [1] tem como objetivo buscar por uma aliança conexa arbitrária de tamanho máximo $k$, a fim de tornar o problema tratável. Porém, neste trabalho o tamanho da aliança buscada será *exatamente* $k$, pois acreditamos que o tamanho da aliança seja importante. Antes de entrar na explicação minuciosa do algoritmo, é importante explicar o que é um algoritmo FPT. 
+Como encontrar uma aliança defensiva em um grafo é um problema NP-completo, torna-se necessário o uso de técnicas avançadas para torná-lo tratável. O algoritmo utilizado neste trabalho é classificado como FPT (_Fixed-Parameter Tractable_) e busca identificar uma aliança defensiva conexa de tamanho exatamente $k$. Antes de detalhar o funcionamento do algoritmo, é importante entender o que significa FPT e como ele é aplicado.
 
-#### Complexidade
-FPT (*Fixed-Parameter Tractable*) é uma classe de complexidade que trata de problemas parametrizáveis (como os de complexidade exponencial) ao isolar e fixar um parâmetro específico do problema, chamado $k$, e então expressando a complexidade na forma $f(k)*p(n).$ Desta forma, $f(k)$ é a parte da complexidade que depende exclusivamente de $k$ e pode ser *superpolinomial*, enquanto $p(n)$ é uma função polinomial de $n$. Sendo assim, fixar $k$ em valores pequenos nos permite abordar o algoritmo de forma mais tratável, custando muito menos tempo, a depender do tamanho de $k$.
+#### Complexidade FPT (_Fixed-Parameter Tractable_)
+FPT é, na verdade, uma **classe de complexidade** que aborda problemas parametrizados, onde a dificuldade do problema pode ser atribuída a um parâmetro específico, denotado por $k$. O objetivo é separar a dependência de $k$ da complexidade geral do problema, permitindo que o problema seja tratado eficientemente para valores pequenos de $k$, mesmo que o tamanho da entrada $n$ seja grande. 
 
-O algoritmo usado neste estudo foi proposto por [1], e tem complexidade $O(k^kn)$, e é uma melhora significativa de seu predecessor, que tinha complexidade $O((2k − 1)^kk^2n)$. Esse é um avanço substancial, mas ainda é interessante demonstrar como problemas, mesmo parametrizados, crescem rapidamente:
+Dizer que "um algoritmo é FPT", portanto, é dizer que o problema que este algoritmo resolver é da classe FPT e ele está abordando este problema isolando a variável $k$.
 
-| $k$ | $k^k$          |
-| --- | -------------- |
-| 2   | 4              |
-| 3   | 27             |
-| 4   | 256            |
-| 5   | 3.125          |
-| 6   | 46.656         |
-| 7   | 823.543        |
-| 9   | 387.420.489    |
-| 10  | 10.000.000.000 |
+A complexidade de um algoritmo FPT é expressa na forma:
+$$f(k) \cdot p(n)$$
+- **$f(k)$:** Uma função que depende apenas do parâmetro $k$. Ela pode crescer exponencialmente ou superpolinomialmente em relação a $k$, mas é independente do tamanho total da entrada $n$.
+- **$p(n)$:** Uma função polinomial no tamanho da entrada $n$.
+
+Essa abordagem é útil em situações onde $k$ pode ser fixado ou mantido pequeno, tornando o problema tratável em cenários onde abordagens tradicionais seriam inviáveis devido ao crescimento exponencial em $n$.
+
+#### Aplicação ao problema
+No caso do problema de alianças defensivas, $k$ representa o tamanho da aliança que estamos buscando. Embora o problema geral de encontrar alianças defensivas seja NP-completo, parametrizá-lo por $k$ permite projetar algoritmos relativamente eficientes para instâncias com valores pequenos de $k$, mesmo que o grafo $G$ tenha um grande número de vértices.
+
+O algoritmo FPT utilizado neste estudo foi proposto por [1] e tem complexidade:
+$$O(k^k \cdot n)$$
+Essa é uma complexidade razoável em comparação com outros algoritmos publicados que resolvem o mesmo problema, mas ainda assim a função $k^k$ cresce rapidamente com o aumento de $k$, como demonstrado na tabela abaixo:
+
+|$k$|$k^k$|
+|---|---|
+|2|4|
+|3|27|
+|4|256|
+|5|3.125|
+|6|46.656|
+|7|823.543|
+|9|387.420.489|
+|10|10.000.000.000|
 
 | ![](GraficoKelevK.png)                   |
 | ---------------------------------------- |
 | <center>Gráfico da função $k^k$</center> |
-O propósito do algoritmo então é garantir que o tempo possa ser diminuído de acordo com $k$, sem que seja necessário executar para todo $n-k$ restante.
+
+Como pode ser visto, mesmo valores moderados de $k$ resultam em um crescimento muito rápido na complexidade. Assim, a eficiência do algoritmo depende diretamente de manter $k$ pequeno.
+
+#### Propósito do algoritmo
+O objetivo do algoritmo é garantir que, ao parametrizar o problema, a busca pela solução seja limitada a subconjuntos de tamanho $k$, reduzindo significativamente o espaço de busca comparado a uma abordagem que analisaria todos os subconjuntos possíveis. Além disso, ele explora propriedades estruturais dos grafos para otimizar a execução e evitar cálculos redundantes, tornando o problema mais acessível em cenários reais.
 
 #### Explicação
 O algoritmo é dividido em duas funções principais, a `main` e a `defensiveAlliance`. A `main` recebe como entrada um Grafo $G$ e o tamanho da aliança desejada, um inteiro positivo $k$. De forma intuitiva, a abordagem do algoritmo é partir de um vértice do grafo por vez e olhar sua vizinhança numa tentativa de expandi-lo até formar uma aliança defensiva de tamanho $k$, ou todos os vértices terem servido de raiz da expansão.
@@ -164,12 +140,14 @@ No início de `defensiveAlliance` o algoritmo escolhe o vértice de maior `c_w` 
 
 A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos necessários serem adicionados, ou seja, para que `w` seja defendido dentro da restrição do tamanho máximo `k`. Essa verificação funciona de modo semelhante a uma heurística de busca, poupando tempo ao evitar vértices que não podem ser defendidos posteriormente.
 
+	Dar uma introdução melhor pra esse lema, e mudar o nome
 ##### Lema 14 [1].
 Assuma que $S \subseteq V$ é estendível para uma aliança defensiva $S'$, onde $|S| <|S'| = k$ então, para qualquer vértice desprotegido $w \in S$, $|S' \cap (N[w] - S|) \ge c_w$.
 Em outras palavras se $S$ é estendível e $w$ é um vértice desprotegido de $S$ então $c_w$ é o número de vizinhos de $w$ fora de $S$ que é necessário para proteger $w$ em $S$.
 
 Esse lema é o que podemos considerar como o núcleo do algoritmo, pois ele nos garante também que para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1$  vértices contém ao menos um vértice $w_i$ para o qual $S \cup {w_i}$ é estendível se e somente se S é estendível.
 
+	Esses parecem ok, mas da pra talçvez falar mais 
 #### Evitando repetir conjuntos
 Observando o comportamento do algoritmo no visualizador web foi possível notar que um comportamento pouco eficiente: o critério de expansão de $S$ (destacado a seguir) abre margem pra repetir várias vezes a mesma combinação de vértices, levando, principalmente em grafos de grande quantidade de vértices, a muito esforço improdutivo. 
 
@@ -265,6 +243,7 @@ As figuras a seguir são de uma busca por uma aliança de tamanho $k = 15$ em um
 | ----------------------------------------- |
 | <center>Passo final do algoritmo</center> |
 
+	Melhorar essa descrição, e de repente, usar outros prints
 #### Mapa de calor
 É possível também ativar a visualização do mapa de calor, que colore os vértices de acordo com a quantidade de vezes que ele foi explorado pelo algoritmo.
 
@@ -281,6 +260,8 @@ O algoritmo originalmente estudado e a versão com as melhorias propostas foram 
 Para testar o algoritmo utilizamos a função da biblioteca `networkx nx.erdos_renyi_graph(v,e,seed)` onde `v` é o número de vértices `e` é a probabilidade de 2 vértices formarem uma aresta, e `seed` é uma semente para geração do Grafo.
 
 Para os testes a seguir foram fixados os seguintes seguintes parâmetros `v=30` `e=0.333` e `seed=100` e executamos para `k` variando entre `1` e `29`.
+
+	O que fazer aqui?
 
 | ![[Execução sem repetição de conjuntos.png]]                                 |
 | ---------------------------------------------------------------------------- |
