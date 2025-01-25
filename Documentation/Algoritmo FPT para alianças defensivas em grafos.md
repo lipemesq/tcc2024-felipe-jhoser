@@ -63,7 +63,7 @@ Dizer que "um algoritmo está em FPT", portanto, é dizer que o problema que est
 
 A complexidade de um algoritmo FPT é expressa na forma: 
 
-$$O(f(k)⋅p(n))O(f(k) \cdot p(n))$$
+$$O(f(k)⋅p(n))$$
 
 - **$f(k)$:** Uma função que depende apenas do parâmetro $k$. Ela pode crescer exponencialmente ou superpolinomialmente em relação a $k$, mas é independente do tamanho total da entrada $n$.
 - **$p(n)$:** Uma função polinomial no tamanho da entrada $n$.
