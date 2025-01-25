@@ -61,7 +61,9 @@ FPT é, na verdade, uma **classe de complexidade** que aborda problemas parametr
 
 Dizer que "um algoritmo está em FPT", portanto, é dizer que o problema que este algoritmo resolve está na classe FPT, e que ele trata esse problema isolando a variável $k$.
 
-A complexidade de um algoritmo FPT é expressa na forma: O(f(k)⋅p(n))O(f(k) \cdot p(n))
+A complexidade de um algoritmo FPT é expressa na forma: 
+
+$$O(f(k)⋅p(n))O(f(k) \cdot p(n))$$
 
 - **$f(k)$:** Uma função que depende apenas do parâmetro $k$. Ela pode crescer exponencialmente ou superpolinomialmente em relação a $k$, mas é independente do tamanho total da entrada $n$.
 - **$p(n)$:** Uma função polinomial no tamanho da entrada $n$.
@@ -81,9 +83,10 @@ DefensiveAlliance(G, S, k)
 ...
 ```
 
-Enquanto $k$ limita a profundidade da busca, a expressão `v.c_w <= k - tamanho de S` limita a largura da busca, de acordo com o lema 14[1] que será demonstrado mais à frente neste texto, se faz necessário visitar somente $\lfloor N[v]/2 + 1 \rfloor$ para garantir que um vértice pode ser defendido, ou não.
+Enquanto $k$ limita a profundidade da busca, a expressão `v.c_w <= k - tamanho de S` limita a largura da busca, de acordo com o lema 14[1] que será enunciado mais à diante neste texto, se faz necessário visitar somente $\lfloor N[v]/2 + 1 \rfloor$ para garantir que um vértice pode ser defendido, ou não.
 
-Dessa forma, o algoritmo FPT utilizado neste estudo foi proposto por [1] e tem complexidade: O(kk⋅n)O(k^k \cdot n)
+Dessa forma, o algoritmo FPT utilizado neste estudo foi proposto por [1] e tem complexidade: 
+$$O(k⋅n)O(k^k \cdot n)$$
 
 Essa é uma complexidade razoável em comparação com outros algoritmos publicados que resolvem o mesmo problema, mas ainda assim a função $k^k$ cresce rapidamente com o aumento de $k$, como observado na tabela abaixo:
 
@@ -125,11 +128,11 @@ Main(G,k)
 	retorne "Sem aliança";
 ```
 
-O papel da função `main` é garantir que todos os vértices foram usados como raiz da expansão. Para isso, primeiro é chamada a função auxiliar `update` que atualiza o estado de `c_w` de todos os vértices _possível aliança_ `S`.
+O papel da função `main` é garantir que todos os vértices foram usados como raiz da expansão. Para isso, primeiro é chamada a função auxiliar `init_cw` que inicializa o estado de `c_w` de todos os vértices do Grafo `G`.
 
-```md
-Update(G, S)
-	Para cada vértice v de S:
+```
+init_cw(G)
+	Para cada vértice v de G:
 		v.c_w <- $$\ceil(|N(v)|/2) - |N(v) \cap S|$$
 ```
 
@@ -158,9 +161,9 @@ DefensiveAlliance(G, S, k)
 	Retorne NULL;
 ```
 
-No início de `defensiveAlliance`, o algoritmo escolhe o vértice de maior `c_w` em `S`, que seria o vértice mais vulnerável da aliança. Esse vértice serve para tanto verificar se `S` se tornou uma aliança quanto como ponto de expansão a fim de incluir novos vértices.
+No início de `defensiveAlliance`, o algoritmo escolhe o vértice de maior `c_w` em `S`, que em outras palavras, seria o vértice mais vulnerável da aliança. Esse vértice serve para tanto verificar se `S` se tornou uma aliança quanto como ponto de expansão a fim de incluir novos vértices para defender conjunto `S` nesse nivel da recursão.
 
-A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos necessários serem adicionados, ou seja, para que `w` seja defendido dentro da restrição do tamanho máximo `k`. Essa verificação funciona de modo semelhante a uma heurística de busca, poupando tempo ao evitar vértices que não podem ser defendidos posteriormente. Por conta disso, pelo lema 14[1] a seguir, somente vértices em $G$ com $N[v] <= 2k+1$ serão considerados na busca.
+A seguir, o algoritmo verifica se há espaço em `S` para os `c_w` vizinhos necessários à serem adicionados, ou seja, para que `w` seja defendido dentro da restrição do tamanho máximo `k`. Essa verificação funciona de modo semelhante a uma heurística de busca, poupando tempo ao evitar vértices que não podem ser defendidos posteriormente. Por conta disso, pelo lema 14[1] a seguir, vértices em $G$ com $N[v] > 2k+1$ nunca serão considerados na busca.
 
 ##### Lema 14 [1].
 
@@ -168,7 +171,9 @@ Assuma que $S \subseteq V$ é estendível para uma aliança defensiva $S'$, onde
 
 Em outras palavras, se $S$ é estendível e $w$ é um vértice desprotegido de $S$, então $c_w$ é o número de vizinhos de $w$ fora de $S$ que são necessários para proteger $w$ em $S$.
 
-Esse lema é o que podemos considerar como o núcleo do algoritmo, pois ele nos garante também que, para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1\rfloor$ vértices, contém ao menos um vértice $w_i$ para o qual $S \cup {w_i}$ é estendível se e somente se $S$ é estendível, ou seja, precisamos verificar somente o chão da metade mais um dos vizinhos de $w$ para protegê-lo em $S$ se $S$ é estendível ou para descartar $w$ nessa árvore da recursão.
+Esse lema é o que podemos considerar como o núcleo do algoritmo, pois ele nos garante também que, para qualquer subconjunto $W \subseteq N[w] - S$ com $t = \lfloor \frac{d_w}{2} \rfloor + 1\rfloor$ vértices, contém ao menos um vértice $w_i$ para o qual $S \cup {w_i}$ é estendível se e somente se $S$ é estendível.
+
+Esse lema é importante, pois a partir dele sabemos que precisamos verificar somente metade mais um dos vizinhos de $w$ para encontrar um vizinho $w_i$ que o protege em $S$ se $S$ é estendível para uma aliança defensiva ou para descartar $w$ nessa árvore da recursão.
 
 ```
 Esses parecem ok, mas dá pra talvez falar mais 
