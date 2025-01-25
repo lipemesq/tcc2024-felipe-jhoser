@@ -43,7 +43,7 @@ A fim de trabalharmos com o conceito de alianças defensivas, primeiro é import
 - **Subgrafo:** Um grafo $F$ é subgrafo de $G$ se $V(F) \subseteq V(G)$ e $E(F) \subseteq E(G)$.
 - **Conectividade:** Um grafo é conexo se existe um caminho entre quaisquer dois vértices.
 
-Agora, uma **aliança defensiva** é um subconjunto $S \subseteq V$ se, para cada vértice $v \in S$, o número de vizinhos de $v$ dentro de $S$ é pelo menos igual ao número de vizinhos de $v$ fora de $S$, ou seja: ∣N(v)∩S∣≥∣N(v)∖S∣∣N(v)∩S∣≥∣N(v)∖S∣ Essa definição reflete a ideia de que os vértices de $S$ formam uma estrutura em que cada um de seus vértices estará protegido por si mesmo e pelos seus aliados em caso de "ataque" de seus vizinhos não-aliados.
+Agora, uma **aliança defensiva** é um subconjunto $S \subseteq V$ se, para cada vértice $v \in S$, o número de vizinhos de $v$ dentro de $S$ é pelo menos igual ao número de vizinhos de $v$ fora de $S$, ou seja: $$∣N(v)∩S∣≥∣N(v)∖S∣$$ Essa definição reflete a ideia de que os vértices de $S$ formam uma estrutura em que cada um de seus vértices estará protegido por si mesmo e pelos seus aliados em caso de "ataque" de seus vizinhos não-aliados.
 
 Embora uma aliança defensiva não precise ser conexa, neste trabalho consideramos apenas alianças defensivas **conexas**. Mas vale destacar que, caso uma aliança defensiva seja desconexa, cada componente desconexa da aliança defensiva deverá, por definição, ser uma aliança defensiva.
 
